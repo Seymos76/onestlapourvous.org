@@ -15,7 +15,7 @@
     },
     "dependencies": {
         "gijgo": "^1.9.13",
-        "jquery": "^3.4.1",
+        "jquery": "^3.4.0",
         "tui-calendar": "^1.12.12"
     }
 }
