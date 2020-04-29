@@ -413,49 +413,63 @@ class ManagerController extends AbstractController
     {
         if ($request->isMethod("POST")) {
             $role = $request->request->get('role');
+            $email = $request->request->get('email');
             $subject = $request->request->get('subject');
             $message = $request->request->get('message');
-            $count = 0;
-            dump($role, $subject, $message);
-            if ("ROLE_THERAPIST" === $role) {
-                $users = $therapistRepository->findAll();
-                foreach ($users as $user) {
-                    $count++;
-                    $mailerFactory->createAndSend(
-                        $subject,
-                        $user->getEmail(),
-                        null,
-                        $this->renderView(
-                            'email/manager_contact_user.html.twig',
-                            [
-                                'subject' => $subject,
-                                'message' => $message
-                            ]
-                        )
-                    );
-                }
+            if ("" !== $email) {
+                $mailerFactory->createAndSend(
+                    $subject,
+                    $email,
+                    null,
+                    $this->renderView(
+                        'email/manager_contact_user.html.twig',
+                        [
+                            'subject' => $subject,
+                            'message' => $message
+                        ]
+                    )
+                );
+                $this->addFlash('success', "Message envoyé aux à {$email}.");
             } else {
-                $users = $patientRepository->findAll();
-                foreach ($users as $user) {
-                    $count++;
-                    $mailerFactory->createAndSend(
-                        $subject,
-                        $user->getEmail(),
-                        null,
-                        $this->renderView(
-                            'email/manager_contact_user.html.twig',
-                            [
-                                'subject' => $subject,
-                                'message' => $message
-                            ]
-                        )
-                    );
+                $count = 0;
+                if ("ROLE_THERAPIST" === $role) {
+                    $users = $therapistRepository->findAll();
+                    foreach ($users as $user) {
+                        $count++;
+                        $mailerFactory->createAndSend(
+                            $subject,
+                            $user->getEmail(),
+                            'contact-therapeutes@enlienavecvous.org',
+                            $this->renderView(
+                                'email/manager_contact_user.html.twig',
+                                [
+                                    'subject' => $subject,
+                                    'message' => $message
+                                ]
+                            )
+                        );
+                    }
+                } else {
+                    $users = $patientRepository->findAll();
+                    foreach ($users as $user) {
+                        $count++;
+                        $mailerFactory->createAndSend(
+                            $subject,
+                            $user->getEmail(),
+                            null,
+                            $this->renderView(
+                                'email/manager_contact_user.html.twig',
+                                [
+                                    'subject' => $subject,
+                                    'message' => $message
+                                ]
+                            )
+                        );
+                    }
                 }
+                $messageRole = User::USER_ROLE[$role];
+                $this->addFlash('success', "Message envoyé aux {$count} {$messageRole}.");
             }
-
-            $messageRole = User::USER_ROLE[$role];
-
-            $this->addFlash('success', "Message envoyé aux {$count} {$messageRole}.");
             return $this->redirectToRoute('manager_contact_by_roles');
         }
 
