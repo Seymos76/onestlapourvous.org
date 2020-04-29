@@ -19,6 +19,7 @@ use App\Repository\PatientRepository;
 use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,6 +33,7 @@ use Symfony\Component\Security\Core\Security;
  * Class PatientController
  * @package App\Controller
  * @Route(path="/patient")
+ * @IsGranted({"ROLE_PATIENT"})
  */
 class PatientController extends AbstractController
 {
@@ -48,7 +50,6 @@ class PatientController extends AbstractController
      */
     public function dashboard()
     {
-        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         return $this->render(
             'patient/dashboard.html.twig'
         );
@@ -60,8 +61,6 @@ class PatientController extends AbstractController
      */
     public function appointments(AppointmentRepository $appointmentRepository)
     {
-        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
-        /** @var Patient $currentPatient */
         $currentPatient = $this->getCurrentPatient();
         $appointsAndHistory = $appointmentRepository->findBy(
             ['patient' => $currentPatient, 'status' => Appointment::STATUS_BOOKED]
@@ -89,7 +88,6 @@ class PatientController extends AbstractController
         HistoryHelper $historyHelper
     )
     {
-        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         if ($appointment instanceof Appointment && $appointment->getStatus() === Appointment::STATUS_BOOKED) {
             $appointment->setBooked(false);
             $appointment->setCancelled(true);
@@ -116,9 +114,8 @@ class PatientController extends AbstractController
      * @Route(path="/recherche", name="patient_research")
      * @return Response
      */
-    public function research(Security $security)
+    public function research()
     {
-        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         return $this->render(
             'patient/research.html.twig',
             [
@@ -139,7 +136,6 @@ class PatientController extends AbstractController
         EntityManagerInterface $entityManager
     )
     {
-        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         $patient = $this->getCurrentPatient();
         $patientId = $patient->getId();
         $appoints = $appointmentRepository->getAppointmentsByTherapist($therapist);
@@ -217,7 +213,6 @@ class PatientController extends AbstractController
      */
     public function history(HistoryRepository $historyRepository)
     {
-        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
         $currentUser = $this->getCurrentPatient();
         $history = $historyRepository->findByPatient($currentUser);
         return $this->render(
@@ -239,8 +234,6 @@ class PatientController extends AbstractController
         MailerFactory $mailerFactory
     )
     {
-        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
-        /** @var Patient $currentUser */
         $currentUser = $this->getCurrentPatient();
         $prevEmail = $currentUser->getEmail();
         $settingsType = $this->createForm(PatientSettingsType::class, $currentUser);
@@ -296,8 +289,6 @@ class PatientController extends AbstractController
         EntityManagerInterface $manager
     )
     {
-        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette page.");
-        /** @var Patient $user */
         $user = $this->getCurrentPatient();
         $changePasswordForm = $this->createForm(ChangePasswordType::class, $user);
         $changePasswordForm->handleRequest($request);
@@ -328,8 +319,6 @@ class PatientController extends AbstractController
         MailerFactory $mailerFactory
     )
     {
-        $this->denyAccessUnlessGranted("ROLE_PATIENT", null, "Vous n'avez pas accès à cette fonctionnalité.");
-        /** @var Patient $user */
         $user = $this->getCurrentPatient();
         if ($user instanceof Patient) {
             $userPassword = $request->request->get('password');

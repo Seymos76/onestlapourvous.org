@@ -27,7 +27,7 @@ security:
             logout:
                 path: app_logout
                 # where to redirect after logout
-                target: 'https://%env(resolve:PROJECT_ADDR)%/login'
+                target: 'https://%env(resolve:PROJECT_URL)%/login'
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
