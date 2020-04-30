@@ -232,22 +232,15 @@ class PatientController extends AbstractController
     {
         $currentUser = $this->getCurrentPatient();
         $prevEmail = $currentUser->getEmail();
-        $settingsType = $this->createForm(PatientSettingsType::class, $currentUser);
+        $settingsType = $this->createForm(
+            PatientSettingsType::class,
+            $currentUser,
+            ['data' => $currentUser]
+        );
         $settingsType->handleRequest($request);
         if ($request->isMethod('POST') && $settingsType->isSubmitted() && $settingsType->isValid()) {
             /** @var Patient $user */
             $user = $settingsType->getData();
-            if ($request->request->get('country') !== null) {
-                $user->setCountry($request->request->get('country'));
-            }
-            if ($request->request->get('department') !== null) {
-                $department = $departmentRepository->find($request->request->get('department'));
-                if ($department instanceof Department) {
-                    $user->setDepartment($department);
-                } else {
-                    $user->setScalarDepartment($department);
-                }
-            }
             if ($user->getEmail() !== $prevEmail) {
                 $user->setUniqueEmailToken();
                 $mailerFactory->createAndSend(

@@ -19,6 +19,7 @@ use App\Repository\HistoryRepository;
 use App\Repository\TherapistRepository;
 use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -329,22 +330,15 @@ class TherapistController extends AbstractController
     {
         $currentUser = $this->getCurrentTherapist();
         $prevEmail = $currentUser->getEmail();
-        $settingsType = $this->createForm(TherapistSettingsType::class, $currentUser);
+        $settingsType = $this->createForm(
+            TherapistSettingsType::class,
+            $currentUser,
+            ['data' => $currentUser]
+        );
         $settingsType->handleRequest($request);
         if ($request->isMethod('POST') && $settingsType->isSubmitted() && $settingsType->isValid()) {
             /** @var Therapist $user */
             $user = $settingsType->getData();
-            if ($request->request->get('country') !== null) {
-                $user->setCountry($request->request->get('country'));
-            }
-            if ($request->request->get('department') !== null) {
-                $department = $departmentRepository->find($request->request->get('department'));
-                if ($department instanceof Department) {
-                    $user->setDepartment($department);
-                } else {
-                    $user->setScalarDepartment($department);
-                }
-            }
             if ($user->getEmail() !== $prevEmail) {
                 $user->setUniqueEmailToken();
                 $mailerFactory->createAndSend(
