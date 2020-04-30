@@ -31,7 +31,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"confirm_booking"})
+     * @Groups({"confirm_booking", "csv_export"})
      */
     protected $email;
 
@@ -63,13 +63,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string")
-     * @Groups({"create_booking", "get_bookings", "patient_research"})
+     * @Groups({"create_booking", "get_bookings", "patient_research", "csv_export"})
      */
     protected $firstName;
 
     /**
      * @ORM\Column(type="string")
-     * @Groups({"create_booking", "get_bookings", "patient_research"})
+     * @Groups({"create_booking", "get_bookings", "patient_research", "csv_export"})
      */
     protected $lastName;
 

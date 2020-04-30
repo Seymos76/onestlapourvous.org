@@ -19,6 +19,7 @@ $(document).ready( function () {
     $locationFilter.on('change', function (e) {
         $filterForm.submit();
     });
+    $availibilityForm.hide();
 
     $btnAvailability.on('click', function(event) {
         $availibilityForm.toggle();

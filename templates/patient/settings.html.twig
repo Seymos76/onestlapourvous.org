@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label for="phoneNumber">Téléphone </label>
+                    <label for="phoneNumber">Téléphone (sans le préfix du pays, celui-ci est ajouté automatiquement si nécesssaire)</label>
                     {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control'}}) }}
                     <div class="invalid-feedback">
                         Please enter a valid phone number.
@@ -57,8 +57,15 @@
                 Pays enregistré : {{ constant('App\\Entity\\Department::COUNTRIES')[app.user.country] }}
                 <br>
                 Département enregistré : {{ app.user.department.name }}
-            {% else %}
-                <div id="geolocation"></div>
+            {% endif %}
+
+            {% if form.department is defined %}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="department">Département</label>
+                        {{ form_widget(form.department, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
             {% endif %}
 
             <button class="btn btn-primary btn-lg btn-block" type="submit">Valider mes modifications</button>

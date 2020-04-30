@@ -6,7 +6,7 @@
         </i>
     </div>
     <div>
-        Envoi d'un mail à tous les utilisateurs
+        Envoi d'un mail à tous les utilisateurs par role ou par email
     </div>
 {% endblock %}
 
@@ -18,6 +18,10 @@
                     <fieldset class="form-group">
                         <label for="subject">Sujet du message</label>
                         <input type="text" name="subject" id="subject" class="form-control">
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" class="form-control">
                     </fieldset>
                     <fieldset class="form-group">
                         <label for="role">Par rôle</label>

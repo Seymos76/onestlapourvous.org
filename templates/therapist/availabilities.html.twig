@@ -19,6 +19,19 @@
 
 {% block body %}
     <div class="row">
+        <div class="col-xs-12">
+            <p>
+                Vous êtes libre de choisir la durée des séances : 30, 40, 45 minutes, c’est vous qui décidez en fonction de votre pratique et de ce qui vous semble le plus ajusté à la situation.
+            </p>
+            <p>
+                Par exemple, si vous décidez de consacrer 30 minutes à chaque séance, et que vous souhaitez vous rendre disponible un matin entre 9h et 12h30 vous devez entrer manuellement la totalité des créneaux. De 9h à 9h30 puis de 9h30 à 10h ou de 9h40 à 10h10 si vous souhaitez vous accorder une pause, puis de 10h10 à 10h40, etc. Vous ne devez pas entrer un créneau de 9h à 12h30.
+            </p>
+            <p>
+                Nous avons choisi cette option car il nous semblait important que chaque thérapeute ait le choix de son organisation.
+            </p>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-2">
             {% if permission is defined and permission == true %}
                 <!-- Button trigger modal -->
@@ -94,33 +107,14 @@
                                 <!-- Button trigger modal -->
                                 {% if a.booked == false %}
                                     <a href="{{ path('therapist_availability_edit', {'id': a.id}) }}" class="btn btn-outline-primary">
-                                        <i class="fa fa-edit"></i>
+                                        <i class="fa fa-edit"></i> Modifier
                                     </a>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal{{ a.id }}">
-                                        <i class="fa fa-times"></i>
-                                    </button>
+                                    <a href="{{ path('therapist_availability_delete', {'id': a.id}) }}" class="btn btn-outline-danger">
+                                        <i class="fa fa-times"></i> Supprimer
+                                    </a>
                                 {% endif %}
 
-                                <!-- Modal -->
-                                <div class="modal fade" id="deleteModal{{ a.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{ a.id }}" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Supprimer un créneau</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Êtes-vous certain-e de vouloir supprimer ce créneau ?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Non, annuler</button>
-                                                <a href="{{ path('therapist_availability_delete', {'id': a.id}) }}" type="button" class="btn btn-outline-danger">Oui, supprimer</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                {% include "_modales/_delete_availability.html.twig" %}
                             </td>
                         </tr>
                     {% endfor %}

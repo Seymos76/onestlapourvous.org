@@ -19,9 +19,12 @@ use App\Repository\HistoryRepository;
 use App\Repository\TherapistRepository;
 use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,7 +53,6 @@ class TherapistController extends AbstractController
      */
     public function dashboard()
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         return $this->render(
             'therapist/dashboard.html.twig'
         );
@@ -62,8 +64,6 @@ class TherapistController extends AbstractController
      */
     public function bookings(AppointmentRepository $appointmentRepository)
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        /** @var Therapist $currentUser */
         $currentUser = $this->getCurrentTherapist();
 
         return $this->render(
@@ -133,8 +133,6 @@ class TherapistController extends AbstractController
         HistoryHelper $historyHelper
     )
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        /** @var Therapist $currentUser */
         $currentUser = $this->getCurrentTherapist();
         if (!$appointment instanceof Appointment) {
             $this->addFlash('error',"Réservation introuvable...");
@@ -198,8 +196,6 @@ class TherapistController extends AbstractController
         PaginatorInterface $paginator
     )
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        /** @var Therapist $currentUser */
         $currentUser = $this->getCurrentTherapist();
         $appointment = new Appointment();
         $appointment->setTherapist($currentUser);
@@ -253,7 +249,6 @@ class TherapistController extends AbstractController
      */
     public function availabilitiesEdit(Appointment $appointment, Request $request, EntityManagerInterface $manager)
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         if ($appointment->getPatient() instanceof Patient) {
             $this->addFlash('error',"Ce créneau a été réservé, impossible de le modifier.");
             return $this->redirectToRoute('therapist_availabilities');
@@ -281,7 +276,6 @@ class TherapistController extends AbstractController
      */
     public function availabilitiesDelete(Appointment $appointment, EntityManagerInterface $manager): RedirectResponse
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         if (!$appointment || !$appointment instanceof Appointment) {
             $this->addFlash('error', "Créneau introuvable...");
             return $this->redirectToRoute('therapist_availabilities');
@@ -303,7 +297,6 @@ class TherapistController extends AbstractController
      */
     public function history(HistoryRepository $historyRepository)
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         $currentUser = $this->getCurrentTherapist();
         return $this->render(
             'therapist/history.html.twig',
@@ -319,7 +312,6 @@ class TherapistController extends AbstractController
      */
     public function patients()
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
         return $this->render(
             'therapist/patients.html.twig'
         );
@@ -336,26 +328,17 @@ class TherapistController extends AbstractController
         MailerFactory $mailerFactory
     )
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        /** @var Therapist $currentUser */
         $currentUser = $this->getCurrentTherapist();
         $prevEmail = $currentUser->getEmail();
-        $settingsType = $this->createForm(TherapistSettingsType::class, $currentUser);
+        $settingsType = $this->createForm(
+            TherapistSettingsType::class,
+            $currentUser,
+            ['data' => $currentUser]
+        );
         $settingsType->handleRequest($request);
         if ($request->isMethod('POST') && $settingsType->isSubmitted() && $settingsType->isValid()) {
             /** @var Therapist $user */
             $user = $settingsType->getData();
-            if ($request->request->get('country') !== null) {
-                $user->setCountry($request->request->get('country'));
-            }
-            if ($request->request->get('department') !== null) {
-                $department = $departmentRepository->find($request->request->get('department'));
-                if ($department instanceof Department) {
-                    $user->setDepartment($department);
-                } else {
-                    $user->setScalarDepartment($department);
-                }
-            }
             if ($user->getEmail() !== $prevEmail) {
                 $user->setUniqueEmailToken();
                 $mailerFactory->createAndSend(
@@ -395,8 +378,6 @@ class TherapistController extends AbstractController
         EntityManagerInterface $manager
     )
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette page.");
-        /** @var Therapist $user */
         $user = $this->getCurrentTherapist();
         $changePasswordForm = $this->createForm(ChangePasswordType::class, $user);
         $changePasswordForm->handleRequest($request);
@@ -428,8 +409,6 @@ class TherapistController extends AbstractController
         MailerFactory $mailerFactory
     )
     {
-        $this->denyAccessUnlessGranted("ROLE_THERAPIST", null, "Vous n'avez pas accès à cette fonctionnalité.");
-        /** @var Therapist $user */
         $user = $this->getCurrentTherapist();
         if ($user instanceof Therapist) {
             $userPassword = $request->request->get('password');
