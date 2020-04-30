@@ -48,6 +48,7 @@ class DataExport
         foreach ($users as $user) {
             $writer->writeRow([$user->getEmail(),$user->getFirstName(),$user->getLastName()]);
         }
+        return $writer;
     }
 
     public function saveNewCsv(Spreadsheet $spreadsheet, string $fileName)

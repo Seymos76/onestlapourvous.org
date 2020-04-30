@@ -23,6 +23,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  * Class TherapistController
  * @package App\Controller
  * @Route(path="/therapeute")
- * @IsGranted({"ROLE_THERAPIST"})
  */
 class TherapistController extends AbstractController
 {

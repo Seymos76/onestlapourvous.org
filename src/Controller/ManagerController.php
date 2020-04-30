@@ -21,6 +21,7 @@ use App\Services\StatisticTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCSV\Writer;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sentry\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

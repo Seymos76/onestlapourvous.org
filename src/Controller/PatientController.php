@@ -9,7 +9,6 @@ use App\Entity\Department;
 use App\Entity\History;
 use App\Entity\Patient;
 use App\Entity\Therapist;
-use App\Entity\User;
 use App\Form\ChangePasswordType;
 use App\Form\PatientSettingsType;
 use App\Repository\AppointmentRepository;
@@ -19,7 +18,6 @@ use App\Repository\PatientRepository;
 use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,13 +25,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * Class PatientController
  * @package App\Controller
  * @Route(path="/patient")
- * @IsGranted({"ROLE_PATIENT"})
  */
 class PatientController extends AbstractController
 {

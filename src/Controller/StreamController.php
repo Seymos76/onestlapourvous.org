@@ -24,13 +24,17 @@ class StreamController
     public function export(DataExport $dataExport, UserRepository $userRepository)
     {
         $fileName = "utilisateurs_".date('Ymd-Hi').'.csv';
-        $path = "/tmp/{$fileName}";
+        $path = __DIR__."../../public/exports/";
+        $file = $path.$fileName;
         $fileSystem = new Filesystem();
         if (!$fileSystem->exists($path)) {
-            $fileSystem->tempnam('/tmp', $fileName);
+            file_put_contents($file, '');
+            $fileSystem->tempnam($path, $fileName);
         }
-        file_put_contents('/tmp/'.$fileName, 'quelque chose');
-        $dataExport->writeData($path, $userRepository->findAll());
+        $writer = $dataExport->writeData($file, $userRepository->findAll());
+        file_put_contents($file, $writer);
+        $fileStream = fopen($file, 'r+');
+        dd($writer, $fileName, $file, $fileStream);
         // just shows text, need to send csv file
         return new StreamedResponse(function() use ($path, $fileName) {
             $outputStream = fopen('php://output', 'wb');
