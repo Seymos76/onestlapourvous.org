@@ -1213,6 +1213,7 @@ section {
         top: 0;
         left: 0;
         height: 170px;
+        display: none;
     }
 }
 
@@ -1661,10 +1662,11 @@ section {
     top: 0;
     left: 0;
     right: 0;
+    background-color: #d7314b;
 }
 
 .header-mobile .header-mobile__bar {
-    padding: 15px 0;
+    padding: 5px 0;
 }
 
 .header-mobile .header-mobile-inner {
@@ -1691,7 +1693,7 @@ section {
     padding: 0;
     line-height: 1;
     vertical-align: top;
-    background: #fff;
+    background-color: #d7314b;
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;

@@ -18,6 +18,7 @@ use App\Repository\PatientRepository;
 use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -207,14 +208,20 @@ class PatientController extends AbstractController
      * @Route(path="/historique", name="patient_history")
      * @return Response
      */
-    public function history(HistoryRepository $historyRepository)
+    public function history(HistoryRepository $historyRepository, Request $request, PaginatorInterface $paginator)
     {
         $currentUser = $this->getCurrentPatient();
         $history = $historyRepository->findByPatient($currentUser);
+
+        $paginated = $paginator->paginate(
+            $history,
+            $request->query->getInt('page', 1),
+            10
+        );
         return $this->render(
             'patient/history.html.twig',
             [
-                'history' => $history
+                'history' => $paginated
             ]
         );
     }

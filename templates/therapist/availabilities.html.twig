@@ -13,17 +13,19 @@
 {% set form = appointment_form %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-xs-12">
-            <p class="mb-2">
-                Vous êtes libre de choisir la durée des séances : 30, 40, 45 minutes, c’est vous qui décidez en fonction de votre pratique et de ce qui vous semble le plus ajusté à la situation.
-            </p>
-            <p class="mb-2">
-                Par exemple, si vous décidez de consacrer 30 minutes à chaque séance, et que vous souhaitez vous rendre disponible un matin entre 9h et 12h30 vous devez entrer manuellement la totalité des créneaux. De 9h à 9h30 puis de 9h30 à 10h ou de 9h40 à 10h10 si vous souhaitez vous accorder une pause, puis de 10h10 à 10h40, etc. Vous ne devez pas entrer un créneau de 9h à 12h30.
-            </p>
-            <p class="mb-2">
-                Nous avons choisi cette option car il nous semblait important que chaque thérapeute ait le choix de son organisation.
-            </p>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <p class="mb-2">
+                    Vous êtes libre de choisir la durée des séances : 30, 40, 45 minutes, c’est vous qui décidez en fonction de votre pratique et de ce qui vous semble le plus ajusté à la situation.
+                </p>
+                <p class="mb-2">
+                    Par exemple, si vous décidez de consacrer 30 minutes à chaque séance, et que vous souhaitez vous rendre disponible un matin entre 9h et 12h30 vous devez entrer manuellement la totalité des créneaux. De 9h à 9h30 puis de 9h30 à 10h ou de 9h40 à 10h10 si vous souhaitez vous accorder une pause, puis de 10h10 à 10h40, etc. Vous ne devez pas entrer un créneau de 9h à 12h30.
+                </p>
+                <p class="mb-2">
+                    Nous avons choisi cette option car il nous semblait important que chaque thérapeute ait le choix de son organisation.
+                </p>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -35,14 +37,6 @@
                 </button>
             {% endif %}
         </div>
-        <div class="col-md-4">
-            <form class="form-inline" action="{{ path('therapist_availabilities') }}" method="get" id="table_filter_form">
-                <fieldset class="form-group">
-                    <label for="date_filter">Filter par date</label>
-                    <input type="date" name="date_filter" id="date_filter" class="form-control" value="{% if filters.date_filter is defined %}{{ filters.date_filter ?: filters.date_filter }}{% endif %}">
-                </fieldset>
-            </form>
-        </div>
     </div>
     <div class="row mt-5" id="add_availability_form">
         {{ form_start(form) }}
@@ -53,13 +47,13 @@
                     {{ form_widget(form.bookingDate, {'attr': {'class': 'form-control'}}) }}
                 </fieldset>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
                 <fieldset class="form-group">
                     {{ form_label(form.bookingStart) }}
                     {{ form_widget(form.bookingStart, {'attr': {'class': 'booking_start_picker'}}) }}
                 </fieldset>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
                 <fieldset class="form-group">
                     {{ form_label(form.bookingEnd) }}
                     {{ form_widget(form.bookingEnd, {'attr': {'class': 'booking_end_picker'}}) }}
@@ -72,6 +66,16 @@
             </div>
         </div>
         {{ form_end(form) }}
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <form class="form-inline" action="{{ path('therapist_availabilities') }}" method="get" id="table_filter_form">
+                <fieldset class="form-group">
+                    <label for="date_filter">Filter par date</label>
+                    <input type="date" name="date_filter" id="date_filter" class="form-control" value="{% if filters.date_filter is defined %}{{ filters.date_filter ?: filters.date_filter }}{% endif %}">
+                </fieldset>
+            </form>
+        </div>
     </div>
 
     <div class="row mt-5">
