@@ -1,22 +1,17 @@
 {% extends "account_layout.html.twig" %}
 
 {% block heading %}
-    <div class="page-title-icon">
-        <i class="pe-7s-loop icon-gradient bg-mean-fruit">
-        </i>
-    </div>
-    <div>
-        Recherche par thérapeute
+    <div class="overview-wrap">
+        <h2 class="title-1 mb-3">Recherche par thérapeute</h2>
     </div>
 {% endblock %}
 
 {% block body %}
     <div class="row">
-        <div class="table table-responsive">
-            <table class="table table-striped table-sm">
+        <div class="table-responsive m-b-40">
+            <table class="table table-borderless table-data3">
                 <thead>
                 <tr>
-                    <th>#</th>
                     <th>Date</th>
                     <th>Début</th>
                     <th>Fin</th>
@@ -28,7 +23,6 @@
                     <tbody>
                     {% for a in appoints %}
                         <tr>
-                            <td>{{ a.id }}</td>
                             <td>{{ a.bookingDate|date('d/m/Y') }}</td>
                             <td>{{ a.bookingStart|date('H:i') }}</td>
                             <td>{{ a.bookingEnd|date('H:i') }}</td>

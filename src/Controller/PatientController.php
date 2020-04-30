@@ -275,12 +275,14 @@ class PatientController extends AbstractController
     public function security(
         Request $request,
         UserPasswordEncoderInterface $encoder,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        AppointmentRepository $appointmentRepository
     )
     {
         $user = $this->getCurrentPatient();
         $changePasswordForm = $this->createForm(ChangePasswordType::class, $user);
         $changePasswordForm->handleRequest($request);
+        $appointments = $appointmentRepository->findBy(['patient' => $user, 'status' => Appointment::STATUS_BOOKED]);
         if ($request->isMethod('POST') && $changePasswordForm->isSubmitted() && $changePasswordForm->isValid()) {
             $newPassword = $changePasswordForm->getData()->getPassword();
             $encoded = $encoder->encodePassword($user, $newPassword);
@@ -293,7 +295,7 @@ class PatientController extends AbstractController
             'patient/security.html.twig',
             [
                 'change_password_form' => $changePasswordForm->createView(),
-                'appointments' => $user->getAppointments()
+                'appointments' => $appointments
             ]
         );
     }

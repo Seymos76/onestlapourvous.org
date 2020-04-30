@@ -3,27 +3,32 @@
 {% set form = change_password_form %}
 
 {% block heading %}
-    <div class="page-title-icon">
-        <i class="pe-7s-shield icon-gradient bg-mean-fruit">
-        </i>
-    </div>
-    <div>
-        Sécurité
+    <div class="overview-wrap">
+        <h2 class="title-1">Sécurité</h2>
     </div>
 {% endblock %}
 
 {% block body %}
     <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-6 order-md-1">
-            <h4 class="mb-3">Mon mot de passe</h4>
             {{ form_start(form) }}
             <fieldset class="form-group">
                 {{ form_label(form.password.first) }}
-                {{ form_widget(form.password.first, {'attr': {'placeholder': "Votre nouveau mot de passe"}}) }}
+                {{ form_widget(form.password.first, {
+                    'attr': {
+                        'placeholder': "Votre nouveau mot de passe",
+                        'class': "form-control"
+                    }
+                }) }}
             </fieldset>
             <fieldset class="form-group">
                 {{ form_label(form.password.second) }}
-                {{ form_widget(form.password.second, {'attr': {'placeholder': "Confirmez votre nouveau mot de passe"}}) }}
+                {{ form_widget(form.password.second, {
+                    'attr': {
+                        'placeholder': "Confirmez votre nouveau mot de passe",
+                        'class': "form-control"
+                    }
+                }) }}
             </fieldset>
             <button class="btn btn-primary btn-md btn-block" type="submit">Valider mon nouveau mot de passe</button>
             {{ form_end(form) }}
@@ -39,11 +44,13 @@
                 </button>
             {% else %}
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
+                <a class="btn btn-danger" href="{{ path('therapist_account_delete') }}">
+                    Supprimer mon compte (sans confirmation et irréversible)
+                </a>
+                {#<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
                     Supprimer mon compte
                 </button>
 
-                <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -67,8 +74,12 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>#}
             {% endif %}
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
 {% endblock %}

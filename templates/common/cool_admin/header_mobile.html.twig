@@ -1,0 +1,142 @@
+<header class="header-mobile d-block d-lg-none">
+    <div class="header-mobile__bar">
+        <div class="container-fluid">
+            <div class="header-mobile-inner">
+                <a class="logo" href="{{ path('therapist_dashboard') }}">
+                    <img src="{{ asset('images/logo_enlienavecvous_square.png') }}" alt="CoolAdmin" />
+                </a>
+                <button class="hamburger hamburger--slider" type="button">
+                    <span class="hamburger-box">
+                        <span class="hamburger-inner"></span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar-mobile">
+        <div class="container-fluid">
+            <ul class="navbar-mobile__list list-unstyled">
+                {% if is_granted('ROLE_THERAPIST') %}
+                    <li>
+                        <a href="{{ path('therapist_dashboard') }}">
+                            <i class="fas fa-tachometer-alt"></i>Tableau de bord
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('therapist_bookings') }}">
+                            <i class="fas fa-ticket-alt"></i>Réservations
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('therapist_availabilities') }}">
+                            <i class="fas fa-clock"></i>Disponibilités
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('therapist_history') }}">
+                            <i class="fas fa-history"></i>Historique
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('therapist_settings') }}">
+                            <i class="fas fa-cogs"></i>Paramètres
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('therapist_security') }}">
+                            <i class="fas fa-shield-alt"></i>Sécurité
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('index') }}" target="_blank">
+                            <i class="fas fa-backward"></i>Retour au site
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_logout') }}">
+                            <i class="fas fa-sign-out-alt"></i>Déconnexion
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{ path('patient_dashboard') }}">
+                            <i class="fas fa-tachometer-alt"></i>Tableau de bord
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('patient_research') }}">
+                            <i class="fas fa-search"></i>Recherche
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('patient_appointments') }}">
+                            <i class="fas fa-tachometer-alt"></i>Rendez-vous
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('patient_history') }}">
+                            <i class="fas fa-tachometer-alt"></i>Historique
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('patient_settings') }}">
+                            <i class="fas fa-tachometer-alt"></i>Paramètres
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('patient_security') }}">
+                            <i class="fas fa-tachometer-alt"></i>Sécurité
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('index') }}" target="_blank">
+                            <i class="fas fa-backward"></i>Retour au site
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_logout') }}">
+                            <i class="fas fa-sign-out"></i>Déconnexion
+                        </a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_MANAGER') %}
+                    <li>
+                        <a href="{{ path('manager_dashboard') }}">
+                            <i class="fas fa-chart-bar"></i>Statistiques
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('manager_new_users') }}">
+                            <i class="fas fa-user-plus"></i>Nouveaux utilisateurs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('manager_users_waiting') }}">
+                            <i class="fas fa-user-circle"></i>En attente de validation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('manager_manage_users') }}">
+                            <i class="fas fa-user-circle"></i>Gestion des membres
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('manager_contact_by_roles') }}">
+                            <i class="fas fa-envelope"></i>Contacter les membres
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('manager_zones') }}">
+                            <i class="fas fa-map"></i>Zones géographiques
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('manager_appoints_to_delete') }}">
+                            <i class="fas fa-times-circle"></i>Réservations à supprimer
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</header>

@@ -25,6 +25,7 @@
         "@sentry/browser": "^5.15.5",
         "axios": "^0.19.2",
         "bootstrap-select": "^1.13.12",
+        "ckeditor": "^4.12.1",
         "geolocator": "^2.1.5",
         "jquery": "^2.2.4",
         "moment": "^2.24.0",

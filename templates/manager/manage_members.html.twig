@@ -1,17 +1,21 @@
 {% extends "account_layout.html.twig" %}
 
 {% block heading %}
-    <div class="page-title-icon">
-        <i class="pe-7s-users icon-gradient bg-mean-fruit">
-        </i>
-    </div>
-    <div>
-        Membres actifs
+    <div class="overview-wrap">
+        <h2 class="title-1 mb-3">Membres actifs</h2>
+        <div class="btn-group">
+            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle btn btn-primary">Export</button>
+            <div tabindex="-1" aria-hidden="true" role="menu" class="dropdown-menu">
+                <a href="{{ path('stream_export', {'role': "ROLE_USER"}) }}" tabindex="0" class="dropdown-item">Tous les utilisateurs</a>
+                <a href="{{ path('stream_export', {'role': "ROLE_PATIENT"}) }}" tabindex="0" class="dropdown-item">Les demandeur.es</a>
+                <a href="{{ path('stream_export', {'role': "ROLE_THERAPIST"}) }}" tabindex="0" class="dropdown-item">Les praticien.nes</a>
+                <a href="{{ path('stream_export', {'role': "ROLE_MANAGER"}) }}" tabindex="0" class="dropdown-item">Les managers</a>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block title_actions %}
-    {% include "common/_page_title_actions.html.twig" %}
 {% endblock %}
 
 {% block body %}
@@ -34,74 +38,74 @@
             </form>
         </div>
     </div>#}
-    <div class="container-fluid">
-        <div class="table-responsive">
-            <table class="table table-striped table-sm">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Email</th>
-                    <th>Date inscription</th>
-                    <th>Role</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Validé</th>
-                    <th>Pays</th>
-                    <th>Département</th>
-                    <th>Changer le role</th>
-                    <th>Supprimer le compte</th>
-                </tr>
-                </thead>
-                {% if users|length %}
-                    <tbody>
-                    {% for u in users %}
-                        <tr>
-                            <td>{{ u.id }}</td>
-                            <td>{{ u.email }}</td>
-                            <td>{{ u.createdAt|date('d/m/Y') }}</td>
-                            <td>
-                                {{ constant('App\\Entity\\User::USER_ROLE')[u.roles|last] }}
-                            </td>
-                            <td>{{ u.lastName|upper }}</td>
-                            <td>{{ u.firstName|capitalize }}</td>
-                            <td>{{ u.isActive }}</td>
-                            <td>
-                                {% if u.country is defined %}
-                                    {{ constant('App\\Entity\\Department::COUNTRIES')[u.country] }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if u.department is defined %}
-                                    {{ u.department.name }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                <form action="{{ path('manager_manage_users') }}" method="post">
-                                    <select name="user_role" id="user_role">
-                                        {% if u.roles|last == 'ROLE_THERAPIST' %}
-                                            <option value="ROLE_THERAPIST">Thérapeute</option>
-                                            <option value="ROLE_MANAGER">Manager</option>
-                                        {% else %}
-                                            <option value="ROLE_PATIENT">Patient</option>
-                                            <option value="ROLE_THERAPIST">Thérapeute</option>
-                                            <option value="ROLE_MANAGER">Manager</option>
-                                        {% endif %}
-                                    </select>
-                                    <input type="hidden" name="user_id" value="{{ u.id }}">
-                                    <button type="submit" class="btn btn-primary">Mettre à jour</button>
-                                </form>
-                            </td>
-                            <td>
-                                <a href="{{ path('manager_delete_account_by_id', {'id': u.id}) }}" class="btn btn-danger"><i class="fa fa-times"></i></a> (action directe et irréversible)
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                {% else %}
-                    <p>Aucun utilisateur trouvé pour ce-s filtre-s.</p>
-                {% endif %}
-            </table>
-            {{ knp_pagination_render(users) }}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="table-responsive table-responsive-data2">
+                <table class="table table-data2">
+                    <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Date inscription</th>
+                        <th>Role</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Validé</th>
+                        <th>Pays</th>
+                        <th>Département</th>
+                        <th>Changer le role</th>
+                        <th>Supprimer le compte</th>
+                    </tr>
+                    </thead>
+                    {% if users|length %}
+                        <tbody>
+                        {% for u in users %}
+                            <tr>
+                                <td>{{ u.email }}</td>
+                                <td>{{ u.createdAt|date('d/m/Y') }}</td>
+                                <td>
+                                    {{ constant('App\\Entity\\User::USER_ROLE')[u.roles|last] }}
+                                </td>
+                                <td>{{ u.lastName|upper }}</td>
+                                <td>{{ u.firstName|capitalize }}</td>
+                                <td>{{ u.isActive }}</td>
+                                <td>
+                                    {% if u.country is defined %}
+                                        {{ constant('App\\Entity\\Department::COUNTRIES')[u.country] }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if u.department is defined %}
+                                        {{ u.department.name }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form action="{{ path('manager_manage_users') }}" method="post">
+                                        <select name="user_role" id="user_role">
+                                            {% if u.roles|last == 'ROLE_THERAPIST' %}
+                                                <option value="ROLE_THERAPIST">Thérapeute</option>
+                                                <option value="ROLE_MANAGER">Manager</option>
+                                            {% else %}
+                                                <option value="ROLE_PATIENT">Patient</option>
+                                                <option value="ROLE_THERAPIST">Thérapeute</option>
+                                                <option value="ROLE_MANAGER">Manager</option>
+                                            {% endif %}
+                                        </select>
+                                        <input type="hidden" name="user_id" value="{{ u.id }}">
+                                        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <a href="{{ path('manager_delete_account_by_id', {'id': u.id}) }}" class="btn btn-danger"><i class="fa fa-times"></i></a> (action directe et irréversible)
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    {% else %}
+                        <p>Aucun utilisateur trouvé pour ce-s filtre-s.</p>
+                    {% endif %}
+                </table>
+                {{ knp_pagination_render(users) }}
+            </div>
         </div>
     </div>
 {% endblock %}

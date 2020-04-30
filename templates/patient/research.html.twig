@@ -4,12 +4,8 @@
 {% endblock %}
 
 {% block heading %}
-    <div class="page-title-icon">
-        <i class="pe-7s-loop icon-gradient bg-mean-fruit">
-        </i>
-    </div>
-    <div>
-        Recherche
+    <div class="overview-wrap">
+        <h2 class="title-1 mb-3">Recherche</h2>
     </div>
 {% endblock %}
 
@@ -20,5 +16,6 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ encore_entry_script_tags('patient_search_app') }}
 {% endblock %}
