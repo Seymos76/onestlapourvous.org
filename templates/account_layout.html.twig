@@ -2,53 +2,98 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}En lien avec vous - tableau de bord{% endblock %}</title>
-    <link rel="stylesheet" href="{{ asset('main.css') }}">
+    <!-- Fontfaces CSS-->
+    <link href="{{ asset('cool_admin/css/font-face.css') }}" rel="stylesheet" media="all">
+    <link href="{{ asset('cool_admin/vendor/font-awesome-4.7/css/font-awesome.min.css') }}" rel="stylesheet" media="all">
+    <link href="{{ asset('cool_admin/vendor/font-awesome-5/css/fontawesome-all.min.css') }}" rel="stylesheet" media="all">
+    <link href="{{ asset('cool_admin/vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="{{ asset('cool_admin/vendor/bootstrap-4.1/bootstrap.min.css') }}" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <!--<link href="{{ asset('cool_admin/vendor/animsition/animsition.min.css') }}" rel="stylesheet" media="all">-->
+    <link href="{{ asset('cool_admin/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css') }}" rel="stylesheet" media="all">
+    <link href="{{ asset('cool_admin/vendor/wow/animate.css') }}" rel="stylesheet" media="all">
+    <link href="{{ asset('cool_admin/vendor/css-hamburgers/hamburgers.min.css') }}" rel="stylesheet" media="all">
+    <link href="{{ asset('cool_admin/vendor/slick/slick.css') }}" rel="stylesheet" media="all">
+    <link href="{{ asset('cool_admin/vendor/select2/select2.min.css') }}" rel="stylesheet" media="all">
+    <link href="{{ asset('cool_admin/vendor/perfect-scrollbar/perfect-scrollbar.css') }}" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="{{ asset('cool_admin/css/theme.css') }}" rel="stylesheet" media="all">
     {% block stylesheets %}
     {% endblock %}
 </head>
 <body>
-<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-    {% include "common/_admin_header.html.twig" %}
-    <div class="app-main">
-        {% include "common/_admin_sidebar.html.twig" %}
-        <div class="app-main__outer">
-            <div class="app-main__inner">
-                <div class="app-page-title">
-                    <div class="page-title-wrapper">
-                        <div class="page-title-heading">
-                            {% block heading %}
-                                <div class="page-title-icon">
-                                    <i class="pe-7s-home icon-gradient bg-mean-fruit">
-                                    </i>
-                                </div>
-                                <div>
-                                    Tableau de bord
-                                </div>
-                            {% endblock %}
+<div class="page-wrapper">
+    <!-- HEADER MOBILE-->
+    {% include "common/cool_admin/header_mobile.html.twig" %}
+    <!-- END HEADER MOBILE-->
+
+    <!-- MENU SIDEBAR-->
+    {% include "common/cool_admin/sidebar.html.twig" %}
+    <!-- END MENU SIDEBAR-->
+
+    <!-- PAGE CONTAINER-->
+    <div class="page-container">
+        <!-- HEADER DESKTOP-->
+        {% include "common/cool_admin/header_desktop.html.twig" %}
+        <!-- HEADER DESKTOP-->
+
+        <!-- MAIN CONTENT-->
+        <div class="main-content">
+            <div class="section__content section__content--p30">
+                <div class="container-fluid">
+                    {% include "common/_flash_messages.html.twig" %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% block heading %}{% endblock %}
                         </div>
-                        {% if is_granted('ROLE_MANAGER') %}
-                            {% include "common/_page_title_actions.html.twig" %}
-                        {% endif %}
+                    </div>
+                    {% block body %}
+
+                    {% endblock %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="copyright">
+                                <p>Copyright © 2018 Colorlib. All rights reserved.
+                            </div>
+                        </div>
                     </div>
                 </div>
-                {% include "common/_flash_messages.html.twig" %}
-                {% block body %}{% endblock %}
             </div>
-            {#footer links#}
         </div>
+        <!-- END MAIN CONTENT-->
     </div>
+    <!-- END PAGE CONTAINER-->
 </div>
-
-{% block javascripts %}
-<script src="https://browser.sentry-cdn.com/5.15.5/bundle.min.js" integrity="sha384-wF7Jc4ZlWVxe/L8Ji3hOIBeTgo/HwFuaeEfjGmS3EXAG7Y+7Kjjr91gJpJtr+PAT" crossorigin="anonymous"></script>
-<script>
-    Sentry.init({ dsn: 'https://74c4d076184f4fbc8d070c6b7dddf744@o384906.ingest.sentry.io/5217096' });
+<!-- Jquery JS-->
+<script src="{{ asset('cool_admin/vendor/jquery-3.2.1.min.js') }}"></script>
+<!-- Bootstrap JS-->
+<script src="{{ asset('cool_admin/vendor/bootstrap-4.1/popper.min.js') }}"></script>
+<script src="{{ asset('cool_admin/vendor/bootstrap-4.1/bootstrap.min.js') }}"></script>
+<!-- Vendor JS       -->
+<script src="{{ asset('cool_admin/vendor/slick/slick.min.js') }}">
 </script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="{{ asset('assets/scripts/main.js') }}"></script></body>
+<script src="{{ asset('cool_admin/vendor/wow/wow.min.js') }}"></script>
+<!--<script src="{{ asset('cool_admin/vendor/animsition/animsition.min.js') }}"></script>-->
+<script src="{{ asset('cool_admin/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js') }}">
+</script>
+<script src="{{ asset('cool_admin/vendor/counter-up/jquery.waypoints.min.js') }}"></script>
+<script src="{{ asset('cool_admin/vendor/counter-up/jquery.counterup.min.js') }}">
+</script>
+<script src="{{ asset('cool_admin/vendor/circle-progress/circle-progress.min.js') }}"></script>
+<script src="{{ asset('cool_admin/vendor/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+<script src="{{ asset('cool_admin/vendor/chartjs/Chart.bundle.min.js') }}"></script>
+<script src="{{ asset('cool_admin/vendor/select2/select2.min.js') }}">
+</script>
+<!-- Main JS-->
+<script src="{{ asset('cool_admin/js/main.js') }}"></script>
+{% block javascripts %}
 {% endblock %}
+
 </body>
 </html>

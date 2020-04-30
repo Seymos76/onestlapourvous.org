@@ -17,7 +17,7 @@ class MailerFactory
     {
         $message = (new \Swift_Message($subject))
             ->setTo($to)
-            ->addCc('company@hapinow.fr')
+            //->addCc('company@hapinow.fr')
             ->setFrom($from ?? 'accueil@enlienavecvous.org')
             ->setBody($body, 'text/html');
         $this->mailer->send($message);

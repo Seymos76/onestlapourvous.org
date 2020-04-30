@@ -1,0 +1,63 @@
+{% extends "account_layout.html.twig" %}
+
+{% block heading %}
+    <div class="page-title-icon">
+        <i class="pe-7s-home icon-gradient bg-mean-fruit">
+        </i>
+    </div>
+    <div>
+        Tableau de bord de l'administrateur
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content">
+                <div class="widget-content-outer">
+                    <div class="widget-content-wrapper">
+                        <div class="widget-content-left">
+                            <div class="widget-heading">Personnes aidées</div>
+                        </div>
+                        <div class="widget-content-right">
+                            <div class="widget-numbers text-success">{{ fun_facts['happy_helped'] }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content">
+                <div class="widget-content-outer">
+                    <div class="widget-content-wrapper">
+                        <div class="widget-content-left">
+                            <div class="widget-heading">Rendez-vous honorés</div>
+                        </div>
+                        <div class="widget-content-right">
+                            <div class="widget-numbers text-warning">{{ fun_facts['success_missions'] }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content">
+                <div class="widget-content-outer">
+                    <div class="widget-content-wrapper">
+                        <div class="widget-content-left">
+                            <div class="widget-heading">Volontaires inscrits</div>
+                        </div>
+                        <div class="widget-content-right">
+                            <div class="widget-numbers text-danger">{{ fun_facts['volunteer_reached'] }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('manage_members') }}
+{% endblock %}

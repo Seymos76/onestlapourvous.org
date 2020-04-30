@@ -295,13 +295,20 @@ class TherapistController extends AbstractController
      * @Route(path="/history", name="therapist_history")
      * @return Response
      */
-    public function history(HistoryRepository $historyRepository)
+    public function history(HistoryRepository $historyRepository, Request $request, PaginatorInterface $paginator)
     {
         $currentUser = $this->getCurrentTherapist();
+        $histories = $historyRepository->findByTherapist($currentUser);
+
+        $paginated = $paginator->paginate(
+            $histories,
+            $request->query->getInt('page', 1),
+            10
+        );
         return $this->render(
             'therapist/history.html.twig',
             [
-                'history' => $historyRepository->findByTherapist($currentUser)
+                'history' => $paginated
             ]
         );
     }

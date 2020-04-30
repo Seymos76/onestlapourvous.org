@@ -1,44 +1,43 @@
 {% extends "account_layout.html.twig" %}
 
 {% block heading %}
-    <div class="page-title-icon">
-        <i class="pe-7s-home icon-gradient bg-mean-fruit">
-        </i>
-    </div>
-    <div>
-        Tableau de bord
+    <div class="overview-wrap">
+        <h2 class="title-1 mb-3">Tableau de bord du Manager</h2>
     </div>
 {% endblock %}
 
 {% block body %}
     <div class="row">
-        <p>
-            Dans l'onglet disponibilités, vous pouvez renseigner les horaires auxquels vous souhaitez vous rendre disponible par jour et par créneaux de rendez-vous.
-            Vous etes libre de choisir la durée de vos séances et le temps total mis à disposition, et celui-ci peut varier d'un jour à l'autre et d'une semaine à l'autre.
-            Une fois la séance passée, vous avez la possibilité de renseigner dans vos rendez-vous si elle a bien été honorée.
-        </p>
-        <p>
-            Quand une personne prend rendez-vous avec vous, vous recevez un e-mail de confirmation.
-        </p>
-        <p>
-            C'est à la personne qui prend rendez-vous de prendre contact avec vous à l’heure du rendez-vous.
-            Vous pouvez toutefois contacter la personne en amont si vous souhaitez lui proposer une méthode particulière de prise de contact, ou proposer cet ajustement lors du 1er rendez-vous.
-        </p>
-        <p>
-            Si vous devez annuler votre rendez-vous, merci de le faire au moins 24h.
-        </p>
-        <p>
-            C'est une plateforme temporaire destinée à répondre à une urgence liée à la crise du Covid-19.
-        </p>
-        <p>
-            Le fonctionnement de la plateforme pourra etre prolongé en fonction de l'évolution de la situation. L'information sera communiquée sur le site en temps voulu.
-        </p>
-        <p>
-            Nb: Si à la suite de ce soutien psychologique ponctuel, une personne décide d'engager une thérapie avec un.e thérapeute de la plateforme, elle est invitée à lui formuler sa demande directement.
-            Ce suivi se fera aux conditions définies par le/la thérapeute dans le cadre de son activité régulière (régularité, tarif, etc.).
-        </p>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <p class="mt-2">
+                Dans l'onglet disponibilités, vous pouvez renseigner les horaires auxquels vous souhaitez vous rendre disponible par jour et par créneaux de rendez-vous.
+                Vous etes libre de choisir la durée de vos séances et le temps total mis à disposition, et celui-ci peut varier d'un jour à l'autre et d'une semaine à l'autre.
+                Une fois la séance passée, vous avez la possibilité de renseigner dans vos rendez-vous si elle a bien été honorée.
+            </p>
+            <p class="mt-2">
+                Quand une personne prend rendez-vous avec vous, vous recevez un e-mail de confirmation.
+            </p>
+            <p class="mt-2">
+                C'est à la personne qui prend rendez-vous de prendre contact avec vous à l’heure du rendez-vous.
+                Vous pouvez toutefois contacter la personne en amont si vous souhaitez lui proposer une méthode particulière de prise de contact, ou proposer cet ajustement lors du 1er rendez-vous.
+            </p>
+            <p class="mt-2">
+                Si vous devez annuler votre rendez-vous, merci de le faire au moins 24h.
+            </p>
+            <p class="mt-2">
+                C'est une plateforme temporaire destinée à répondre à une urgence liée à la crise du Covid-19.
+            </p>
+            <p class="mt-2">
+                Le fonctionnement de la plateforme pourra etre prolongé en fonction de l'évolution de la situation. L'information sera communiquée sur le site en temps voulu.
+            </p>
+            <p class="mt-2">
+                Nb: Si à la suite de ce soutien psychologique ponctuel, une personne décide d'engager une thérapie avec un.e thérapeute de la plateforme, elle est invitée à lui formuler sa demande directement.
+                Ce suivi se fera aux conditions définies par le/la thérapeute dans le cadre de son activité régulière (régularité, tarif, etc.).
+            </p>
+        </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
 {% endblock %}

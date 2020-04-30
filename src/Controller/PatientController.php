@@ -18,6 +18,7 @@ use App\Repository\PatientRepository;
 use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -207,14 +208,20 @@ class PatientController extends AbstractController
      * @Route(path="/historique", name="patient_history")
      * @return Response
      */
-    public function history(HistoryRepository $historyRepository)
+    public function history(HistoryRepository $historyRepository, Request $request, PaginatorInterface $paginator)
     {
         $currentUser = $this->getCurrentPatient();
         $history = $historyRepository->findByPatient($currentUser);
+
+        $paginated = $paginator->paginate(
+            $history,
+            $request->query->getInt('page', 1),
+            10
+        );
         return $this->render(
             'patient/history.html.twig',
             [
-                'history' => $history
+                'history' => $paginated
             ]
         );
     }
@@ -275,12 +282,14 @@ class PatientController extends AbstractController
     public function security(
         Request $request,
         UserPasswordEncoderInterface $encoder,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        AppointmentRepository $appointmentRepository
     )
     {
         $user = $this->getCurrentPatient();
         $changePasswordForm = $this->createForm(ChangePasswordType::class, $user);
         $changePasswordForm->handleRequest($request);
+        $appointments = $appointmentRepository->findBy(['patient' => $user, 'status' => Appointment::STATUS_BOOKED]);
         if ($request->isMethod('POST') && $changePasswordForm->isSubmitted() && $changePasswordForm->isValid()) {
             $newPassword = $changePasswordForm->getData()->getPassword();
             $encoded = $encoder->encodePassword($user, $newPassword);
@@ -293,7 +302,7 @@ class PatientController extends AbstractController
             'patient/security.html.twig',
             [
                 'change_password_form' => $changePasswordForm->createView(),
-                'appointments' => $user->getAppointments()
+                'appointments' => $appointments
             ]
         );
     }

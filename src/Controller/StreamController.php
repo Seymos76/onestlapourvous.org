@@ -4,11 +4,14 @@
 namespace App\Controller;
 
 
+use App\Repository\PatientRepository;
+use App\Repository\TherapistRepository;
 use App\Repository\UserRepository;
 use App\Services\DataExport;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,16 +24,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class StreamController
 {
     /**
-     * @Route(path="/export", name="stream_export")
+     * @Route(path="/export/{role}", name="stream_export")
      * @param DataExport $dataExport
      */
-    public function export(DataExport $dataExport, UserRepository $userRepository)
+    public function export(
+        DataExport $dataExport,
+        Request $request,
+        UserRepository $userRepository,
+        PatientRepository $patientRepository,
+        TherapistRepository $therapistRepository
+    )
     {
-        $fileName = "utilisateurs_".date('Ymd-Hi').'.csv';
+        $role = $request->attributes->get('_route_params')["role"];
+        $fileName = "utilisateurs_".date('Ymd-Hi').'_'.time().'.csv';
 
         $tempPath = sys_get_temp_dir().'/exports/';
-        $uniqTime = time();
-        $publicPath = __DIR__."../../../public/exports/{$uniqTime}/";
         $fileSystem = new Filesystem();
         if (!$fileSystem->exists($tempPath)) {
             try {
@@ -42,12 +50,29 @@ class StreamController
         $fileSystem->touch($tempPath.$fileName);
         $tempFile = new File($tempPath.$fileName);
 
-        $writer = $dataExport->writeData($tempFile, $userRepository->findAll());
-        $fileStream = fopen($tempFile, 'r+');
+        $allUsers = $userRepository->findAll();
+        if ($role === "ROLE_USER") {
+            $users = $userRepository->findAll();
+        } else {
+            $users = array_filter($allUsers, function ($user) use ($role) {
+                $roles = $user->getRoles();
+                if ($role === end($roles)) {
+                    return $user;
+                } else {
+                    return null;
+                }
+            });
+        }
+
+        dump($users);
+
+        $writer = $dataExport->writeData($tempFile, $users);
+
 
         $response = new StreamedResponse(function() use ($tempFile) {
             $outputStream = fopen('php://output', 'wb');
             $fileStream = fopen($tempFile, 'r');
+            dump($fileStream);
             stream_copy_to_stream($fileStream, $outputStream);
         });
         $response->headers->set('Content-Type', 'text/csv');

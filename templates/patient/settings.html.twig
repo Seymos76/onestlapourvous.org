@@ -5,12 +5,8 @@
 {% endblock %}
 
 {% block heading %}
-    <div class="page-title-icon">
-        <i class="pe-7s-settings icon-gradient bg-mean-fruit">
-        </i>
-    </div>
-    <div>
-        Paramètres
+    <div class="overview-wrap">
+        <h2 class="title-1 mb-3">Paramètres</h2>
     </div>
 {% endblock %}
 
@@ -55,8 +51,6 @@
             </div>
             {% if app.user.country is not null and app.user.department is not null %}
                 Pays enregistré : {{ constant('App\\Entity\\Department::COUNTRIES')[app.user.country] }}
-                <br>
-                Département enregistré : {{ app.user.department.name }}
             {% endif %}
 
             {% if form.department is defined %}

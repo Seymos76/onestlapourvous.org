@@ -1,22 +1,17 @@
 {% extends "account_layout.html.twig" %}
 
 {% block heading %}
-    <div class="page-title-icon">
-        <i class="pe-7s-users icon-gradient bg-mean-fruit">
-        </i>
-    </div>
-    <div>
-        Utilisateurs en attente de validation
+    <div class="overview-wrap">
+        <h2 class="title-1 mb-3">Utilisateurs en attente de validation</h2>
     </div>
 {% endblock %}
 
 {% block body %}
     <div class="container-fluid">
-        <div class="table table-responsive">
-            <table class="table table-striped table-sm">
+        <div class="table-responsive table-responsive-data2">
+            <table class="table table-data2">
                 <thead>
                 <tr>
-                    <th>#</th>
                     <th>Email</th>
                     <th>Date inscription</th>
                     <th>Role</th>
@@ -32,7 +27,6 @@
                     <tbody>
                     {% for u in waiting_users %}
                         <tr>
-                            <td>{{ u.id }}</td>
                             <td>{{ u.email }}</td>
                             <td>{{ u.createdAt|date('d/m/Y') }}</td>
                             <td>
@@ -70,10 +64,11 @@
                     <p>Tous les utilisateurs sont activés.</p>
                 {% endif %}
             </table>
-            {{ knp_pagination_render(waiting_users) }}
         </div>
+        {{ knp_pagination_render(waiting_users) }}
     </div>
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
 {% endblock %}

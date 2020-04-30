@@ -44,7 +44,7 @@ class DataExport
         $writer = new Writer($path);
         // create and save csv file
         $writer->setDelimiter('|');
-        $writer->writeRow(['email', 'firstname', 'lastname']);
+        //$writer->writeRow(['email', 'firstname', 'lastname']);
         foreach ($users as $user) {
             $writer->writeRow([$user->getEmail(),$user->getFirstName(),$user->getLastName()]);
         }

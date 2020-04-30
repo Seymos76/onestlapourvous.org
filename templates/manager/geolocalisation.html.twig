@@ -5,37 +5,31 @@
 {% endif %}
 
 {% block heading %}
-    <div class="page-title-icon">
-        <i class="pe-7s-map icon-gradient bg-mean-fruit">
-        </i>
-    </div>
-    <div>
-        Zones géographiques ({{departments|length}})
+    <div class="overview-wrap">
+        <h2 class="title-1 mb-3">Zones géographiques ({{departments|length}})</h2>
     </div>
 {% endblock %}
 
 {% block body %}
-    <div class="container-fluid mt-5 mb-5">
-        <div class="row">
-            <form class="form-inline" action="{{ path('manager_zones') }}" method="get" id="table_filter_form">
-                <fieldset class="form-group">
-                    <label for="country_filter">Filter par pays</label>
-                    <select name="country_filter" id="country_filter" class="ml-2">
-                        {% for key, c in countries %}
-                            {% if country_filter is defined and country_filter == key %}
-                                <option selected value="{{ key }}">{{ c }}</option>
-                            {% else %}
-                                <option value="{{ key }}">{{ c }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </fieldset>
-            </form>
-        </div>
+    <div class="row">
+        <form class="form-inline" action="{{ path('manager_zones') }}" method="get" id="table_filter_form">
+            <fieldset class="form-group">
+                <label for="country_filter">Filter par pays</label>
+                <select name="country_filter" id="country_filter" class="ml-2 form-control">
+                    {% for key, c in countries %}
+                        {% if country_filter is defined and country_filter == key %}
+                            <option selected value="{{ key }}">{{ c }}</option>
+                        {% else %}
+                            <option value="{{ key }}">{{ c }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </fieldset>
+        </form>
     </div>
-    <div class="container-fluid">
-        <div class="table table-responsive">
-            <table class="table table-striped table-sm">
+    <div class="row">
+        <div class="table-responsive table-responsive-data2">
+            <table class="table table-data2">
                 <thead>
                 <tr>
                     <th>#</th>
@@ -85,11 +79,12 @@
                     <p>Aucun département trouvé pour ce-s filtre-s.</p>
                 {% endif %}
             </table>
-            {{ knp_pagination_render(departments) }}
         </div>
+        {{ knp_pagination_render(departments) }}
     </div>
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ encore_entry_script_tags('manage_geolocalisation') }}
 {% endblock %}

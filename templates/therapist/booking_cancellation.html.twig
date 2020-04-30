@@ -1,12 +1,8 @@
 {% extends "account_layout.html.twig" %}
 
 {% block heading %}
-    <div class="page-title-icon">
-        <i class="pe-7s-clock icon-gradient bg-mean-fruit">
-        </i>
-    </div>
-    <div>
-        Annulation d'un rendez-vous
+    <div class="overview-wrap">
+        <h2 class="title-1">Annulation d'un rendez-vous</h2>
     </div>
 {% endblock %}
 
@@ -28,4 +24,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
 {% endblock %}

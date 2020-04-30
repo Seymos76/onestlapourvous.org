@@ -5,12 +5,8 @@
 {% endif %}
 
 {% block heading %}
-    <div class="page-title-icon">
-        <i class="pe-7s-map icon-gradient bg-mean-fruit">
-        </i>
-    </div>
-    <div>
-        Villes du département {{ department.name }} - {{ department.code }} - {{ department.towns|length }} villes
+    <div class="overview-wrap">
+        <h2 class="title-1 mb-3">Villes du département {{ department.name }} - {{ department.code }} - {{ department.towns|length }} villes</h2>
     </div>
 {% endblock %}
 
@@ -52,5 +48,6 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ encore_entry_script_tags('manage_geolocalisation') }}
 {% endblock %}
