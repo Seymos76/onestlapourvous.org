@@ -29,7 +29,8 @@
                             {% endblock %}
                         </div>
                         {% if is_granted('ROLE_MANAGER') %}
-                            {% include "common/_page_title_actions.html.twig" %}
+                            {% block title_actions %}
+                            {% endblock %}
                         {% endif %}
                     </div>
                 </div>

@@ -17,6 +17,7 @@ use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use App\Services\DataExport;
 use App\Services\MailerFactory;
+use App\Services\SendInBlueCampaign;
 use App\Services\StatisticTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCSV\Writer;
@@ -190,7 +191,7 @@ class ManagerController extends AbstractController
     }
 
     /**
-     * @Route(path="/manage-users", name="manager_manage_users", defaults={"page"=1})
+     * @Route(path="/manage-users", name="manager_manage_users")
      * @param UserRepository $userRepository
      * @return Response
      */
@@ -201,8 +202,6 @@ class ManagerController extends AbstractController
         PaginatorInterface $paginator
     )
     {
-        $this->denyAccessUnlessGranted("ROLE_MANAGER", null, "Vous n'avez pas accès à cette page.");
-
         if ($request->isMethod("POST")) {
             $role = $request->request->get('user_role');
             $userId = $request->request->get('user_id');
@@ -240,14 +239,6 @@ class ManagerController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
-        $allUsers = $userRepository->findAll();
-        foreach ($allUsers as $singleUser) {
-            $singleUser->setFirstName(strtolower($singleUser->getFirstName()));
-            $singleUser->setLastName(strtolower($singleUser->getLastName()));
-            $singleUser->setDisplayName($singleUser->getFirstName(). " " .$singleUser->getLastName());
-        }
-        $manager->flush();
-        $this->addFlash('success', "Nom, prénom et display name de tous les utilisateurs enregistrés en lower case");
 
         return $this->render(
             'manager/manage_members.html.twig',
@@ -416,11 +407,13 @@ class ManagerController extends AbstractController
         Request $request,
         TherapistRepository $therapistRepository,
         PatientRepository $patientRepository,
-        MailerFactory $mailerFactory
+        MailerFactory $mailerFactory,
+        SendInBlueCampaign $sendInBlueCampaign
     )
     {
         if ($request->isMethod("POST")) {
             $role = $request->request->get('role');
+            $campaignName = $request->request->get('campaignName');
             $email = $request->request->get('email');
             $subject = $request->request->get('subject');
             $message = $request->request->get('message');
@@ -440,6 +433,7 @@ class ManagerController extends AbstractController
                 $this->addFlash('success', "Message envoyé aux à {$email}.");
             } else {
                 $count = 0;
+                $sendInBlueCampaign->createAndSend($campaignName, $subject, $message, $role);
                 if ("ROLE_THERAPIST" === $role) {
                     $users = $therapistRepository->findAll();
                     foreach ($users as $user) {

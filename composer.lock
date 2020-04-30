@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7324bce48950ba4e04f5d4afa78984f5",
+    "content-hash": "a62d6ba796d4c494e0b2c434b80775ad",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -3839,6 +3839,65 @@
             ],
             "description": "A polyfill for getallheaders.",
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "sendinblue/api-v3-sdk",
+            "version": "v6.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sendinblue/APIv3-php-library.git",
+                "reference": "92f90afc165b337f88df9c1fbb16d12cbb9e9359"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sendinblue/APIv3-php-library/zipball/92f90afc165b337f88df9c1fbb16d12cbb9e9359",
+                "reference": "92f90afc165b337f88df9c1fbb16d12cbb9e9359",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": "^6.2",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~1.12",
+                "phpunit/phpunit": "^4.8",
+                "squizlabs/php_codesniffer": "~2.6"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SendinBlue\\Client\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "SendinBlue Developers",
+                    "email": "contact@sendinblue.com",
+                    "homepage": "https://www.sendinblue.com/"
+                }
+            ],
+            "description": "Official SendinBlue provided RESTFul API V3 php library",
+            "homepage": "https://github.com/sendinblue/APIv3-php-library",
+            "keywords": [
+                "api",
+                "php",
+                "sdk",
+                "sendinblue",
+                "swagger"
+            ],
+            "time": "2020-03-27T09:20:07+00:00"
         },
         {
             "name": "sensio/framework-extra-bundle",

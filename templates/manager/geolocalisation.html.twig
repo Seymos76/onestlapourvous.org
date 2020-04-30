@@ -91,5 +91,6 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ encore_entry_script_tags('manage_geolocalisation') }}
 {% endblock %}
