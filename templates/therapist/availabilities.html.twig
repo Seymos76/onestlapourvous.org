@@ -2,6 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('ngo-press/css/jquery-ui.min.css') }}">
 {% endblock %}
 
 {% block heading %}
@@ -131,5 +132,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('therapist_availabilities') }}
+    <script src="{{ asset('ngo-press/js/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('ngo-press/js/therapist_availabilities.js') }}"></script>
 {% endblock %}

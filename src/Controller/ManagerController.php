@@ -11,6 +11,7 @@ use App\Entity\Town;
 use App\Entity\User;
 use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
+use App\Repository\EmailReportRepository;
 use App\Repository\PatientRepository;
 use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;
@@ -483,6 +484,30 @@ class ManagerController extends AbstractController
             'manager/current_bookings.html.twig',
             [
                 'bookings' => $paginated
+            ]
+        );
+    }
+
+    /**
+     * @Route(path="/email-reports", name="manager_email_reports", defaults={"page"=1})
+     * @return Response
+     */
+    public function emailReports(
+        EmailReportRepository $emailReportRepository,
+        PaginatorInterface $paginator,
+        Request $request
+    )
+    {
+        $reports = $emailReportRepository->findAll();
+        $paginated = $paginator->paginate(
+            $reports,
+            $request->query->getInt('page', 1),
+            15
+        );
+        return $this->render(
+            'manager/email_reports.html.twig',
+            [
+                'reports' => $paginated
             ]
         );
     }

@@ -14,11 +14,6 @@ Encore
     .setPublicPath('/build')
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
-    .copyFiles({
-        from: './assets/public/images',
-        to: './public/images/[path][name].[hash:8].[ext]',
-        pattern: /\.(png|jpg|jpeg|gif|svg)$/
-    })
     .copyFiles([
         {from: './node_modules/ckeditor/', to: 'ckeditor/[path][name].[ext]', pattern: /\.(js|css)$/, includeSubdirectories: false},
         {from: './node_modules/ckeditor/adapters', to: 'ckeditor/adapters/[path][name].[ext]'},
@@ -36,11 +31,11 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('patient_search', './assets/js/patient_search.js')
-    .addEntry('therapist_availabilities', './assets/js/therapist_availabilities.js')
-    .addEntry('manage_members', './assets/js/manage_members.js')
-    .addEntry('geolocation', './assets/js/geolocation.jsx')
-    .addEntry('manage_geolocalisation', './assets/js/manage_geolocalisation.js')
+    .addEntry('patient_search', './assets/js/entries/patient_search.js')
+    .addEntry('therapist_availabilities', './assets/js/entries/therapist_availabilities.js')
+    .addEntry('manage_members', './assets/js/entries/manage_members.js')
+    .addEntry('geolocation', './assets/js/entries/geolocation.jsx')
+    .addEntry('manage_geolocalisation', './assets/js/entries/manage_geolocalisation.js')
     //.addEntry('page2', './assets/js/page2.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
@@ -78,7 +73,7 @@ Encore
 
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher
-    //.enableIntegrityHashes(Encore.isProduction())
+    .enableIntegrityHashes(Encore.isProduction())
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
