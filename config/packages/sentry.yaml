@@ -1,2 +1,2 @@
 sentry:
-    #dsn: '%env(SENTRY_DSN)%'
+    dsn: '%env(SENTRY_DSN)%'
