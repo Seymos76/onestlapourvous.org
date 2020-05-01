@@ -93,6 +93,10 @@
     </script>
     <!-- Main JS-->
     <script src="{{ asset('cool_admin/js/main.js') }}"></script>
+    <script src="https://browser.sentry-cdn.com/5.15.5/bundle.min.js" integrity="sha384-wF7Jc4ZlWVxe/L8Ji3hOIBeTgo/HwFuaeEfjGmS3EXAG7Y+7Kjjr91gJpJtr+PAT" crossorigin="anonymous"></script>
+    <script>
+        Sentry.init({ dsn: 'https://74c4d076184f4fbc8d070c6b7dddf744@o384906.ingest.sentry.io/5217096' });
+    </script>
 {% endblock %}
 
 </body>
