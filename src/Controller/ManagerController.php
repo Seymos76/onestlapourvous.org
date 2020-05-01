@@ -405,8 +405,6 @@ class ManagerController extends AbstractController
      */
     public function contactAllUsers(
         Request $request,
-        TherapistRepository $therapistRepository,
-        PatientRepository $patientRepository,
         MailerFactory $mailerFactory,
         SendInBlueCampaign $sendInBlueCampaign
     )
@@ -434,41 +432,6 @@ class ManagerController extends AbstractController
             } else {
                 $count = 0;
                 $sendInBlueCampaign->createAndSend($campaignName, $subject, $message, $role);
-                if ("ROLE_THERAPIST" === $role) {
-                    $users = $therapistRepository->findAll();
-                    foreach ($users as $user) {
-                        $count++;
-                        $mailerFactory->createAndSend(
-                            $subject,
-                            $user->getEmail(),
-                            'contact-therapeutes@enlienavecvous.org',
-                            $this->renderView(
-                                'email/manager_contact_user.html.twig',
-                                [
-                                    'subject' => $subject,
-                                    'message' => $message
-                                ]
-                            )
-                        );
-                    }
-                } else {
-                    $users = $patientRepository->findAll();
-                    foreach ($users as $user) {
-                        $count++;
-                        $mailerFactory->createAndSend(
-                            $subject,
-                            $user->getEmail(),
-                            null,
-                            $this->renderView(
-                                'email/manager_contact_user.html.twig',
-                                [
-                                    'subject' => $subject,
-                                    'message' => $message
-                                ]
-                            )
-                        );
-                    }
-                }
                 $messageRole = User::USER_ROLE[$role];
                 $this->addFlash('success', "Message envoyé aux {$count} {$messageRole}.");
             }
