@@ -1,0 +1,50 @@
+{% extends "account_layout.html.twig" %}
+
+{% block heading %}
+    <div class="overview-wrap">
+        <h2 class="title-1 mb-3">Réservations actives</h2>
+    </div>
+{% endblock %}
+
+{% block title_actions %}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="table-responsive table-responsive-data2">
+                <table class="table table-data2">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Heure</th>
+                        <th>Praticien.ne</th>
+                        <th>Demandeur.se</th>
+                    </tr>
+                    </thead>
+                    {% if bookings|length %}
+                        <tbody>
+                        {% for b in bookings %}
+                            <tr>
+                                <td>{{ b.bookingDate|date('d/m/Y') }}</td>
+                                <td>
+                                    {{ constant('App\\Entity\\Appointment::STATUS')[b.status] }}
+                                </td>
+                                <td>{{ b.therapist.firstName|capitalize }} {{ b.therapist.lastName|upper }}</td>
+                                <td>{{ b.patient.firstName|capitalize }} {{ b.patient.lastName|upper }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    {% else %}
+                        <p>Aucune réservation active.</p>
+                    {% endif %}
+                </table>
+            </div>
+            {{ knp_pagination_render(bookings) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

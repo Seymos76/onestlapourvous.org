@@ -499,6 +499,32 @@ class ManagerController extends AbstractController
     }
 
     /**
+     * @Route(path="/current-bookings", name="manager_current_bookings", defaults={"page"=1})
+     * @param AppointmentRepository $appointmentRepository
+     * @param PaginatorInterface $paginator
+     * @return Response
+     */
+    public function currentBookings(
+        AppointmentRepository $appointmentRepository,
+        PaginatorInterface $paginator,
+        Request $request
+    )
+    {
+        $appointments = $appointmentRepository->findBy(['status' => Appointment::STATUS_BOOKED]);
+        $paginated = $paginator->paginate(
+            $appointments,
+            $request->query->getInt('page', 1),
+            15
+        );
+        return $this->render(
+            'manager/current_bookings.html.twig',
+            [
+                'bookings' => $paginated
+            ]
+        );
+    }
+
+    /**
      * @Route(path="/account/delete/{id}", name="manager_delete_account_by_id")
      * @ParamConverter(name="id", class="App\Entity\User")
      */
