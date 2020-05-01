@@ -3,23 +3,23 @@
 {% block stylesheets %}
     {{ parent() }}
     <!-- Revolution Slider 5.x CSS settings -->
-    <link  href="{{ asset('js/revolution-slider/css/settings.css') }}" rel="stylesheet" type="text/css"/>
-    <link  href="{{ asset('js/revolution-slider/css/layers.css') }}" rel="stylesheet" type="text/css"/>
-    <link  href="{{ asset('js/revolution-slider/css/navigation.css') }}" rel="stylesheet" type="text/css"/>
+    <link  href="{{ asset('ngo-press/js/revolution-slider/css/settings.css') }}" rel="stylesheet" type="text/css"/>
+    <link  href="{{ asset('ngo-press/js/revolution-slider/css/layers.css') }}" rel="stylesheet" type="text/css"/>
+    <link  href="{{ asset('ngo-press/js/revolution-slider/css/navigation.css') }}" rel="stylesheet" type="text/css"/>
 {% endblock %}
 
 {% block body %}
     {% include "common/_rev_slider.html.twig" %}
 
     <!-- reduce sizes-->
-    <section data-margin-top="-80px" id="home_section_1">
+    <section data-margin-top="-50px" id="home_section_1">
         <div class="container pt-0 pb-0">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="call-to-action bg-theme-colored border-radius-5px">
+                    <div class="call-to-action bg-theme-colored-lighter border-radius-5px">
                         <div class="col-md-12 text-center">
-                            <h3 class="text-white mt-15">Réseau de soutien psychologique durant la crise du Covid-19</h3>
-                            <h3 class="text-white mt-15">L’approche de la Gestalt-thérapie au service du plus grand nombre</h3>
+                            <h3 class="text-theme-colored mt-15">Réseau de soutien psychologique durant la crise du Covid-19</h3>
+                            <h3 class="text-theme-colored mt-15">L’approche de la Gestalt-thérapie au service du plus grand nombre</h3>
                         </div>
                     </div>
                 </div>
@@ -55,36 +55,36 @@
                     <div class="col-sm-12 col-md-6 pr-0 pr-sm-15 sm-height-auto mt-sm-0 wow fadeInUp" data-wow-duration="0.6s" data-wow-delay="0.1s">
                         <div class="sm-height-auto bg-theme-colored p-25">
                             <div class="p-30 mb-sm-30">
-                                <h3 class="text-uppercase text-white mt-0">J'ai besoin d'aide</h3>
-                                <p class="text-white">La crise actuelle vous confronte à des situations déstabilisantes :</p>
-                                <p class="text-white font-20">
+                                <h3 class="text-uppercase text-white mt-0 f-cavolini-w"><em>J'ai besoin d'aide</em></h3>
+                                <p class="text-white font-18 f-montserrat-light">La crise actuelle vous confronte à des situations déstabilisantes :</p>
+                                <p class="text-white font-18 f-montserrat-light">
                                     Perte de repères et de rythme, manque d’intimité,
                                     présence constante des enfants, inquiétudes quant à
                                     l’avenir, solitude, peur du virus.
                                 </p>
-                                <p class="text-white">
+                                <p class="text-white font-18 f-montserrat-light">
                                     Nombreuses sont les
                                     peurs ou le mal-être qui peuvent émerger. Ne restez pas
                                     seul.e face à ces difficultés. Contactez-nous.
                                 </p>
-                                <a href="{{ path('ask_for_help') }}" class="btn btn-border btn-circled btn-transparent btn-sm">Demander de l'aide</a>
+                                <a href="{{ path('ask_for_help') }}" class="btn btn-border btn-transparent btn-lg f-montserrat-r-w font-18">Demander de l'aide</a>
                             </div>
                             <i class="flaticon-charity-shaking-hands-inside-a-heart bg-icon"></i>
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-6 pr-0 pr-sm-15 sm-height-auto mt-sm-0 wow fadeInUp" data-wow-duration="0.6s" data-wow-delay="0.1s">
-                        <div class="sm-height-auto bg-theme-colored p-25">
+                        <div class="sm-height-auto bg-theme-colored-lighter p-25">
                             <div class="p-30 mb-sm-30">
-                                <h3 class="text-uppercase text-white mt-0">Je suis thérapeute gestalt et je rejoins le mouvement</h3>
-                                <p class="text-white">Vous êtes thérapeute ou praticien.ne Gestalt ?</p>
-                                <p class="text-white">
+                                <h3 class="text-uppercase text-theme-colored mt-0 f-cavolini-w"><em>Je suis thérapeute gestalt et je rejoins le mouvement</em></h3>
+                                <p class="text-theme-colored font-18 f-montserrat-light">Vous êtes thérapeute ou praticien.ne Gestalt ?</p>
+                                <p class="text-theme-colored font-18 f-montserrat-light">
                                     Dans un élan de solidarité nationale, face à cette
                                     crise sanitaire sans précédent qui bouleverse nos
                                     vies, vous avez à cœur de vous rendre utile en
                                     mettant vos compétences au service du plus grand
                                     nombre. Rejoignez-nous !
                                 </p>
-                                <a href="{{ path('therapist_register') }}" class="btn btn-border btn-circled btn-transparent btn-sm">Proposer mon aide</a>
+                                <a href="{{ path('therapist_register') }}" class="btn btn-border btn-transparent btn-lg text-theme-colored border-theme-colored f-montserrat-r-w font-18">Proposer mon aide</a>
                             </div>
                             <i class="flaticon-charity-home-insurance bg-icon"></i>
                         </div>
@@ -102,52 +102,21 @@
         <div class="container pt-110 pb-110">
             <div class="row">
                 <div class="col-md-8">
-                    <h3 class="text-black font-24 font-weight-600 mb-5">Une urgence ?</h3>
-                    <h2 class="text-black font-36 text-uppercase font-weight-600 mt-0 text-uppercase">
+                    <h3 class="text-black font-24 f-montserrat-light-w mb-5">Une urgence ?</h3>
+                    <h2 class="text-black font-36 text-uppercase f-montserrat-r-w mt-0 text-uppercase">
                         <span class="text-theme-colored">Ne restez pas seul.e</span> face à une situation difficile
                     </h2>
-                    <p class="text-black">si votre vie ou celle d’autrui est en danger, contactez les numéros d’urgence de votre pays.</p>
-                    <a href="{{ path('emergency_numbers') }}" class="btn btn-lg btn-theme-colored mt-20 text-uppercase">Contacts d'urgence</a>
+                    <p class="text-black f-montserrat-light-w">Si votre vie ou celle d’autrui est en danger, contactez les numéros d’urgence de votre pays.</p>
+                    <a href="{{ path('emergency_numbers') }}" class="btn btn-lg btn-theme-colored mt-20 text-uppercase f-montserrat-r-w">Contacts d'urgence</a>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Divider: Funfact -->
-    {#<section class="divider parallax layer-overlay overlay-theme-colored" data-bg-img="" data-parallax-ratio="0.7">
-        <div class="container pt-90 pb-90">
-            {% if fun_facts is defined %}
-                <div class="row">
-                    <div class="col-xs-12 col-sm-4 col-md-4 mb-md-50">
-                        <div class="funfact text-center">
-                            <i class="pe-7s-smile mt-5 text-white"></i>
-                            <h2 data-animation-duration="1000" data-value="{{ fun_facts['happy_helped'] }}" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
-                            <h5 class="text-white text-uppercase font-weight-600">Personnes aidées</h5>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-4 col-md-4 mb-md-50">
-                        <div class="funfact text-center">
-                            <i class="pe-7s-rocket mt-5 text-white"></i>
-                            <h2 data-animation-duration="1000" data-value="{{ fun_facts['success_missions'] }}" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
-                            <h5 class="text-white text-uppercase font-weight-600">Rendez-vous honorés</h5>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-4 col-md-4 mb-md-50">
-                        <div class="funfact text-center">
-                            <i class="pe-7s-add-user mt-5 text-white"></i>
-                            <h2 data-animation-duration="1000" data-value="{{ fun_facts['volunteer_reached'] }}" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
-                            <h5 class="text-white text-uppercase font-weight-600">Praticien.e.s volontaires</h5>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-    </section>#}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('js/revolution-slider/js/jquery.themepunch.tools.min.js') }}"></script>
-    <script src="{{ asset('js/revolution-slider/js/jquery.themepunch.revolution.min.js') }}"></script>
-    <script src="{{ asset('js/home_slider.js') }}"></script>
+    <script src="{{ asset('ngo-press/js/revolution-slider/js/jquery.themepunch.tools.min.js') }}"></script>
+    <script src="{{ asset('ngo-press/js/revolution-slider/js/jquery.themepunch.revolution.min.js') }}"></script>
+    <script src="{{ asset('ngo-press/js/home_slider_rev.js') }}"></script>
 {% endblock %}

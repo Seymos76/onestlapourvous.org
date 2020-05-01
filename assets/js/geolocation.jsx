@@ -33,15 +33,10 @@ export function Geolocation() {
         const city = searchingFile.filter(
             c => c[filter] === value
         );
-        console.log('citySearch:',selection.citySearch);
         setSelection({...selection, city: JSON.stringify(city[0]) })
-        console.log('city selected:',city[0]);
-        console.log('citySearch:',selection.citySearch);
     };
 
     const getDepartmentsByCountry = async () => {
-        console.log(API_URL);
-        console.log(`${API_URL}departments-by-country?country=${selection.country}`);
         const departs = await geolocationApi.getDepartmentsByCountry(selection.country);
         setDepartments([]);
         setDepartments(departs.length > 0 && departs);
@@ -66,7 +61,6 @@ export function Geolocation() {
             c => c[filters[0]] === selection.department
         );
 
-        console.log('cities found:',cities);
         setCities(cities.length > 0 && cities);
     }
 
@@ -76,7 +70,6 @@ export function Geolocation() {
         const filtered = cities.filter(c =>
             c[arrKey].toLowerCase().includes(selection.citySearch.toLowerCase())
         );
-        console.log(filtered);
         setFilteredCities(filtered);
     }
 

@@ -36,9 +36,7 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('app', './assets/js/app.js')
-    .addEntry('public_layout', './assets/js/public_layout.js')
-    .addEntry('patient_search_app', './assets/js/patient_search_app.js')
+    .addEntry('patient_search', './assets/js/patient_search.js')
     .addEntry('therapist_availabilities', './assets/js/therapist_availabilities.js')
     .addEntry('manage_members', './assets/js/manage_members.js')
     .addEntry('geolocation', './assets/js/geolocation.jsx')
@@ -91,7 +89,6 @@ Encore
 ;
 Encore.configureDefinePlugin(options => {
     options["process.env"].API_URL = process.env.API_URL;
-    console.log(options["process.env"].API_URL);
 });
 
 module.exports = Encore.getWebpackConfig();
