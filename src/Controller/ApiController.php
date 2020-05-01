@@ -100,23 +100,6 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route(path="/appointments/filter", name="api_appointments_filter", methods={"POST"})
-     * @return JsonResponse
-     * // Not used but keep it
-     */
-    public function getAvailableAppointmentsFilter(
-        Request $request,
-        AppointmentRepository $appointmentRepository,
-        CustomSerializer $serializer
-    ): JsonResponse
-    {
-        $params = get_object_vars(json_decode($request->getContent()));
-        $appoints = $appointmentRepository->findAvailableAppointmentsByParamsSplited($params);
-        $data = $serializer->serialize($appoints, ['therapist', 'patient']);
-        return new JsonResponse($data, Response::HTTP_OK, [], true);
-    }
-
-    /**
      * @Route(path="/create/booking", name="api_create_booking", methods={"GET"})
      * @return JsonResponse
      */
@@ -269,49 +252,6 @@ class ApiController extends AbstractController
             ['code' => 'ASC']
         );
         $data = $serializer->serialize($towns, ['users','department']);
-        return new JsonResponse($data, Response::HTTP_OK, [], true);
-    }
-
-    /**
-     * @Route(path="/get-cities", name="api_get_cities_react_select", methods={"GET"})
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
-     * not used
-     */
-    public function getCitiesForReactSelect(Request $request, SerializerInterface $serializer)
-    {
-        $country = $request->query->get('country');
-        $city = $request->query->get('city');
-        $client = HttpClient::create();
-        $apiLogin = 'onestlapourvous';
-        $apiKey = 'so4c0d00de65b6aae5842f3e6f4a32040c0f5f7058';
-        $url = "http://www.citysearch-api.com/$country/city?login=$apiLogin&apikey=$apiKey&ville=$city";
-        $response = $client->request('GET', $url);
-        $data = $serializer->serialize($response, 'json');
-        return new JsonResponse($data, Response::HTTP_OK, [], true);
-    }
-
-    /**
-     * @Route(path="/get-ip", name="api_get_ip")
-     * not used
-     */
-    public function getIp(SerializerInterface $serializer, Request $request) {
-        $client = HttpClient::create();
-        $url = "https://api.ipify.org/?format=json";
-        $response = $client->request('GET', $url);
-        $data = $serializer->serialize($response, 'json');
-        return new JsonResponse($data, Response::HTTP_OK, [], true);
-    }
-
-    /**
-     * @Route(path="/get-localisation", name="api_get_localisation")
-     * not used
-     */
-    public function getLocalisation(SerializerInterface $serializer, Request $request) {
-        $client = HttpClient::create();
-        $ip = $request->query->get('ip');
-        $url = "http://ip-api.com/json/$ip";
-        $response = $client->request('GET', $url);
-        $data = $serializer->serialize($response, 'json');
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 }

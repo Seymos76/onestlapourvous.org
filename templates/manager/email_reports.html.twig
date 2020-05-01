@@ -1,0 +1,54 @@
+{% extends "account_layout.html.twig" %}
+
+{% block heading %}
+    <div class="overview-wrap">
+        <h2 class="title-1 mb-3">Email reporting</h2>
+    </div>
+{% endblock %}
+
+{% block title_actions %}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="table-responsive table-responsive-data2">
+                <table class="table table-data2">
+                    <thead>
+                    <tr>
+                        <th>Date d'envoi</th>
+                        <th>Email d'envoi</th>
+                        <th>Destinataire</th>
+                        <th>Reçu</th>
+                    </tr>
+                    </thead>
+                    {% if reports|length %}
+                        <tbody>
+                        {% for r in reports %}
+                            <tr>
+                                <td>{{ r.sentAt|date('d/m/Y H:i') }}</td>
+                                <td>{{ r.sender }}</td>
+                                <td>{{ r.recipient }}</td>
+                                <td>
+                                    {% if r.success %}
+                                        <span class="badge badge-success">Succès</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Echec</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    {% else %}
+                        <p>Pas d'envoi automatique enregistré.</p>
+                    {% endif %}
+                </table>
+            </div>
+            {{ knp_pagination_render(reports) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

@@ -9,7 +9,7 @@
     <meta name="author" content="hapinow" />
     {% include "common/_open_graph_facebook.html.twig" %}
     <!-- Stylesheet -->
-    <!-- <link href="css/style.css" rel="stylesheet" type="text/css"> -->
+    <link href="{{ asset('ngo-press/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     {% block stylesheets %}
         {{ encore_entry_link_tags('public_layout') }}
     {% endblock %}
@@ -39,12 +39,11 @@
 </div>
 
 {% block javascripts %}
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>-->
-    <script src="{{ asset('js/jquery-2.2.4.min.js') }}"></script>
-    <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/jquery-plugin-collection.js') }}"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
+    <script src="{{ asset('ngo-press/js/jquery-2.2.4.min.js') }}"></script>
+    <script src="{{ asset('ngo-press/js/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('ngo-press/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('ngo-press/js/jquery-plugin-collection.js') }}"></script>
+    <script src="{{ asset('ngo-press/js/custom.js') }}"></script>
     <script src="https://browser.sentry-cdn.com/5.15.5/bundle.min.js" integrity="sha384-wF7Jc4ZlWVxe/L8Ji3hOIBeTgo/HwFuaeEfjGmS3EXAG7Y+7Kjjr91gJpJtr+PAT" crossorigin="anonymous"></script>
     <script>
         Sentry.init({ dsn: 'https://3b61aebe42f04e79a64d0ede0e6b2ab7@o384906.ingest.sentry.io/5217092' });
