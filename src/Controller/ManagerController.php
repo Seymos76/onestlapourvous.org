@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Appointment;
 use App\Entity\Department;
+use App\Entity\EmailReport;
 use App\Entity\Therapist;
 use App\Entity\Town;
 use App\Entity\User;
@@ -140,7 +141,8 @@ class ManagerController extends AbstractController
                         'email/therapist_registration.html.twig',
                         ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
                     ),
-                    null
+                    null,
+                    EmailReport::TYPE_REGISTRATION_CONFIRMATION_RETRY
                 );
             } else {
                 $mailerFactory->createAndSend(
@@ -150,7 +152,8 @@ class ManagerController extends AbstractController
                         'email/patient_registration.html.twig',
                         ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
                     ),
-                    null
+                    null,
+                    EmailReport::TYPE_REGISTRATION_CONFIRMATION_RETRY
                 );
             }
 
@@ -180,7 +183,8 @@ class ManagerController extends AbstractController
                     'email/user_activated.html.twig',
                     ['project_url' => $_ENV['PROJECT_URL']]
                 ),
-                null
+                null,
+                EmailReport::TYPE_REGISTRATION_ACTIVATION
             );
             $manager->flush();
             $this->addFlash('success', "Utilisateur activé.");
@@ -427,7 +431,8 @@ class ManagerController extends AbstractController
                             'message' => $message
                         ]
                     ),
-                    null
+                    null,
+                    EmailReport::TYPE_CONTACT_ONE_USER
                 );
                 $this->addFlash('success', "Message envoyé aux à {$email}.");
             } else {
@@ -533,7 +538,8 @@ class ManagerController extends AbstractController
                 "Suppression de votre compte",
                 $user->getEmail(),
                 $this->renderView('email/user_delete_account.html.twig'),
-                null
+                null,
+                EmailReport::TYPE_ACCOUNT_DELETION
             );
             // delete user
             $manager->remove($user);

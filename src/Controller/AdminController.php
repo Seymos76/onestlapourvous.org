@@ -31,7 +31,6 @@ class AdminController extends AbstractController
         $allUsers = $userRepository->findAll();
         foreach ($allUsers as $singleUser) {
             $roles = $singleUser->getRoles();
-            dump(end($roles));
             $singleUser->setFirstName(strtolower($singleUser->getFirstName()));
             $singleUser->setLastName(strtolower($singleUser->getLastName()));
             $singleUser->setDisplayName($singleUser->getFirstName(). " " .$singleUser->getLastName());

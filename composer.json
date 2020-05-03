@@ -81,6 +81,7 @@
     },
     "scripts": {
         "auto-scripts": {
+            "doctrine:schema:update --force": "symfony-cmd",
             "cache:clear": "symfony-cmd",
             "ckeditor:install --clear=drop": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"

@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Appointment;
 use App\Entity\Department;
+use App\Entity\EmailReport;
 use App\Entity\History;
 use App\Entity\Patient;
 use App\Repository\AppointmentRepository;
@@ -91,7 +92,6 @@ class ApiController extends AbstractController
         $department = $departmentRepository->find($departmentId);
         if ($department instanceof Department) {
             $therapists = $therapistRepository->findBy(['department' => $department]);
-            dump($therapists);
             $data = $serializer->serialize($therapists, 'json', ['groups' => ['patient_research']]);
             return new JsonResponse($data, Response::HTTP_OK, [], true);
         } else {
@@ -131,14 +131,16 @@ class ApiController extends AbstractController
             "Confirmation de rendez-vous",
             $appointment->getPatient()->getEmail(),
             $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment]),
-            null
+            null,
+            EmailReport::TYPE_BOOKING_CONFIRMATION
         );
 
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getTherapist()->getEmail(),
             $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment]),
-            null
+            null,
+            EmailReport::TYPE_BOOKING_CONFIRMATION
         );
 
         $data = $serializer->serialize(
@@ -174,14 +176,16 @@ class ApiController extends AbstractController
             "Confirmation de rendez-vous",
             $appointment->getPatient()->getEmail(),
             $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment]),
-            null
+            null,
+            EmailReport::TYPE_BOOKING_CONFIRMATION
         );
 
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getTherapist()->getEmail(),
             $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment]),
-            null
+            null,
+            EmailReport::TYPE_BOOKING_CONFIRMATION
         );
 
         $data = $serializer->serialize(
@@ -189,31 +193,6 @@ class ApiController extends AbstractController
             'json'
         );
         return new JsonResponse($data, Response::HTTP_OK, [], true);
-    }
-
-    /**
-     * @Route(path="/cancel/booking", name="api_cancel_booking", methods={"GET"})
-     * // not used
-     */
-    public function cancelBooking(
-        Request $request,
-        AppointmentRepository $appointmentRepository,
-        EntityManagerInterface $entityManager, SerializerInterface $serializer
-    ): JsonResponse
-    {
-        $appointId = $request->query->get('id');
-        $appointment = $appointmentRepository->find($appointId);
-        if ($appointment instanceof Appointment) {
-            $appointment->setStatus(Appointment::STATUS_AVAILABLE);
-            $appointment->setBooked(false);
-            $appointment->setPatient(null);
-            $entityManager->flush();
-            $data = $serializer->serialize(['message' => "Réservation annulée"], 'json');
-            return new JsonResponse($data, Response::HTTP_OK, [], true);
-        } else {
-            $data = $serializer->serialize(['message' => "Réservation non trouvée"], 'json');
-            return new JsonResponse($data, Response::HTTP_OK, [], true);
-        }
     }
 
     /**

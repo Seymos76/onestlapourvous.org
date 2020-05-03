@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Appointment;
 use App\Entity\Department;
+use App\Entity\EmailReport;
 use App\Entity\History;
 use App\Entity\Patient;
 use App\Entity\Therapist;
@@ -108,9 +109,10 @@ class TherapistController extends AbstractController
         if ($patient->getMalus() >= 3) {
             $mailerFactory->createAndSend(
                 "3 rdv non honorés...",
-                '$to',
+                $appointment->getTherapist()->getEmail(),
                 $this->renderView('email/patient_malus.html.twig', ['patient' => $patient]),
-                null
+                null,
+                EmailReport::TYPE_ALERT_DISHONORED
             );
         }
         $appointment->setStatus($status);
@@ -168,7 +170,8 @@ class TherapistController extends AbstractController
                             : $this->getParameter('project_url')
                     ]
                 ),
-                null
+                null,
+                EmailReport::TYPE_BOOKING_CANCELLATION_BY_THERAPIST
             );
             $currentUser->removeAppointment($appointment);
             $entityManager->remove($appointment);
@@ -355,7 +358,8 @@ class TherapistController extends AbstractController
                         'email/user_change_email.html.twig',
                         ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
                     ),
-                    null
+                    null,
+                    EmailReport::TYPE_CHANGE_EMAIL_ADDR
                 );
                 $manager->flush();
                 $this->addFlash('success', "Vous allez recevoir un mail pour confirmer votre nouvelle adresse email.");
@@ -425,7 +429,8 @@ class TherapistController extends AbstractController
                     "Suppression de votre compte",
                     $user->getEmail(),
                     $this->renderView('email/user_delete_account.html.twig'),
-                    null
+                    null,
+                    EmailReport::TYPE_ACCOUNT_DELETION
                 );
                 // delete user
                 $manager->remove($user);

@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Department;
+use App\Entity\EmailReport;
 use App\Entity\Patient;
 use App\Entity\Therapist;
 use App\Entity\Town;
@@ -94,7 +95,8 @@ class PublicController extends AbstractController
                         'email/patient_registration.html.twig',
                         ['email_token' => $emailToken, 'project_url' => $_ENV['PROJECT_URL']]
                     ),
-                    null
+                    null,
+                    EmailReport::TYPE_REGISTRATION
                 );
                 $entityManager->persist($user);
                 $entityManager->flush();
@@ -142,7 +144,8 @@ class PublicController extends AbstractController
                             'token' => $user->getPasswordResetToken()
                         ]
                     ),
-                    null
+                    null,
+                    EmailReport::TYPE_PASSWORD_RESET_REQUEST
                 );
                 $this->addFlash('success', "Un email vous a été envoyé, pensez à vérifier vos spams.");
                 return $this->redirectToRoute('forgot_password');
@@ -194,7 +197,8 @@ class PublicController extends AbstractController
                 $this->renderView(
                     'email/user_reset_password_success.html.twig'
                 ),
-                null
+                null,
+                EmailReport::TYPE_PASSWORD_RESET_SUCCESS
             );
             $manager->flush();
             $this->addFlash('success', "Vous pouvez désormais vous connecter avec votre nouveau mot de passe.");;
@@ -257,7 +261,6 @@ class PublicController extends AbstractController
         if ($request->isMethod('POST') && $therapistForm->isSubmitted() && $therapistForm->isValid()) {
             $selectedCountry = $request->request->get('country');
             $selectedDepartment = $request->request->get('department');
-            //$city = get_object_vars(json_decode($request->request->get('city')));
 
             $slugger = new Slugify();
             $departSlug = $slugger->slugify($selectedDepartment);
@@ -286,7 +289,8 @@ class PublicController extends AbstractController
                         'email/therapist_registration.html.twig',
                         ['email_token' => $emailToken, 'project_url' => $_ENV['PROJECT_URL']]
                     ),
-                    null
+                    null,
+                    EmailReport::TYPE_REGISTRATION
                 );
                 $entityManager->persist($user);
                 $entityManager->flush();
@@ -326,10 +330,10 @@ class PublicController extends AbstractController
     }
 
     /**
-     * @Route(path="/proposer-mon-aide/en-attente-de-validation", name="registration_waiting_for_email_validation")
+     * @Route(path="/en-attente-de-validation", name="registration_waiting_for_email_validation")
      * @return Response
      */
-    public function registrationSuccessfull()
+    public function registrationSuccessful()
     {
         return $this->render(
             'public/registration_successfull.html.twig'
