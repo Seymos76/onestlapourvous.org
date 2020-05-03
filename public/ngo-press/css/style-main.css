@@ -16,7 +16,6 @@ URL:            http://themeforest.net/user/ThemeMascot
 /* @import "../css/stroke-gap-icons.css"; */
 @import "../css/flaticon-set-charity.css";
 @import "../css/utility-classes.css";
-/*@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700,800|Raleway:200,300,400,500,600,700,800|Trirong:100,200,300,400,500,600,700,800,900);*/
 /*
 This file contains the common styles of this theme.
 */
@@ -116,7 +115,7 @@ body {
   line-height: 1.7;
   color: #666666;
   font-size: 14px;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Montserrat Light', sans-serif;
   background-color: #fff;
 }
 a {
@@ -166,7 +165,7 @@ h1,
 h2,
 .h1,
 .h2 {
-  font-family: 'Trirong', serif;
+  font-family: 'Cavolini Regular', sans-serif;
   font-weight: 600;
   line-height: 1.42857143;
   color: #333333;
@@ -197,7 +196,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: 'Trirong', serif;
+  font-family: 'Cavolini Regular', sans-serif;
   font-weight: 500;
   line-height: 1.42857143;
   color: #333333;

@@ -7,8 +7,8 @@
             <!-- Section Content -->
             <div class="section-content text-center">
                 <div class="row">
-                    <div class="col-md-6 col-md-offset-3 text-center">
-                        <h1 class="text-uppercase text-white font-30">Comment ça marche ?</h1>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                        <h1 class="text-uppercase text-white">Comment ça marche ?</h1>
                     </div>
                 </div>
             </div>
@@ -20,7 +20,7 @@
             <div class="section-content">
                 <div class="row">
                     <div class="col-md-7 mb-sm-40">
-                        <h3 class="pb-10">Si vous demandez de l'aide :</h3>
+                        <h3 class="pb-10 text-theme-colored">Si vous demandez de l'aide :</h3>
                         <p>
                             <strong>
                                 <i>Enlienavecvous.org</i> est complètement gratuit.
@@ -32,7 +32,7 @@
                         <p>
                             Ce service se veut une main tendue, un acte de solidarité parmi de nombreux autres.
                         </p>
-                        <a href="{{ path('the_project') }}" class="btn btn-default btn-md mt-20">En savoir plus sur le projet</a>
+                        <a href="{{ path('the_project') }}" class="btn btn-theme-colored btn-lg text-uppercase btn-md mt-20">En savoir plus sur le projet</a>
                     </div>
                     <div class="col-md-5">
                         <img src="{{ asset('images/enlien_comment_2.png') }}" alt="">
@@ -46,10 +46,10 @@
     <section class="divider layer-overlay overlay-theme-colored">
         <div class="container pt-0 pb-0">
             <div class="row">
-                <div class="call-to-action">
-                    <div class="col-md-10">
-                        <h2 class="text-white font-opensans font-30 mt-0 mb-5">La crise actuelle nous confronte à des situations déstabilisantes.</h2>
-                        <p class="text-white font-opensans font-18 mt-0">
+                <div class="call-to-action m-2">
+                    <div class="col-md-12">
+                        <h2 class="text-white mt-0 mb-5">La crise actuelle nous confronte à des situations déstabilisantes.</h2>
+                        <p class="text-white text-justify mt-0">
                             Durant cette période inédite, nous sommes confronté.e.s à un changement de vie qui peut être source de difficultés au
                             quotidien. La perte de notre routine peut nous impacter de diverses manières, que l’on doive travailler ou que l’on soit
                             confiné : irritabilité, angoisse, peurs, pertes financières, isolement, manque d’intimité ou de contact physique, ennui,
@@ -68,13 +68,13 @@
                     <div class="col-sm-12 col-md-6 col-lg-6">
                         <div class="schedule-box maxwidth500 bg-lighter mb-30">
                             <div class="schedule-details clearfix p-15 pt-10">
-                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Qui ?</h4>
+                                <h4 class="title bg-danger p-25 text-center text-white mt-0">Qui ?</h4>
                                 <div class="clearfix"></div>
                                 <p class="mt-10">
-                                    Toutes les personnes majeures ressentant le besoin d'un soutien psychologique en cette période de covid-19.
+                                    Tout.e.s les personnes majeures ressentant le besoin d'un soutien psychologique en cette période de covid-19.
                                 </p>
-                                <blockquote class="gray">
-                                    <p>Être en lien avec un.e thérapeute peut vous aider à vous sentir moins seul.e, être accueilli.e et entendu.e
+                                <blockquote class="bg-theme-colored-lighter border-left-theme-color-3px">
+                                    <p class="text-theme-colored">Être en lien avec un.e thérapeute peut vous aider à vous sentir moins seul.e, être accueilli.e et entendu.e
                                         dans vos émotions, prendre de la distance et retrouver du discernement.</p>
                                 </blockquote>
                             </div>
@@ -83,7 +83,7 @@
                     <div class="col-sm-12 col-md-6 col-lg-6">
                         <div class="schedule-box maxwidth500 bg-lighter mb-30">
                             <div class="schedule-details clearfix p-15 pt-10">
-                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Avec qui ?</h4>
+                                <h4 class="title bg-danger p-25 text-center text-white mt-0">Avec qui ?</h4>
                                 <div class="clearfix"></div>
                                 <p class="mt-10">
                                     Tou.te.s les thérapeutes inscrit.e.s sur la plateforme sont des
@@ -96,10 +96,47 @@
                     </div>
                 </div>
                 <div class="row mt-30">
-                    <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="col-sm-12 col-md-6">
                         <div class="schedule-box maxwidth500 bg-lighter mb-30">
                             <div class="schedule-details clearfix p-15 pt-10">
-                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Comment ?</h4>
+                                <h4 class="title bg-danger p-25 text-center text-white mt-0">Quoi ?</h4>
+                                <div class="clearfix"></div>
+                                <p class="mt-10">
+                                    <a class="text-theme-colored" href="{{ path('who_are_we') }}">La Gestalt thérapie</a>, en tant que thérapie humaniste et relationnelle,
+                                    est tout particulièrement adaptée à ces situations.
+                                    Un.e thérapeute est une personne avec des compétences professionnelles qui offre un
+                                    cadre sécurisant pour vous accompagner dans ce que vous vivez en ce moment. Parler,
+                                    échanger, être accompagné.e, même sans difficultés aiguës, vous permet de mieux prendre soin de vous et des autres.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="schedule-box maxwidth500 bg-lighter mb-30">
+                            <div class="schedule-details clearfix p-15 pt-10">
+                                <h4 class="title bg-danger p-25 text-center text-white mt-0">Et après ?</h4>
+                                <div class="clearfix"></div>
+                                <p class="mt-10">
+                                    D'une manière générale, ce dispositif vous offre un soutien de 5 séances sur l'ensemble de la durée du
+                                    confinement. C'est une plateforme temporaire destinée à répondre à une urgence liée à la crise du Covid-19.
+                                </p>
+                                <p>
+                                    Le fonctionnement de la plateforme pourra etre prolongé en fonction de l'évolution de la situation.
+                                    L'information sera communiquée sur le site en temps voulu.
+                                </p>
+                                <p>
+                                    Vous pouvez prendre plusieurs rendez-vous avec le ou la même thérapeute en recherchant son
+                                    nom mais vous pouvez également faire appel à un.e autre thérapeute la fois suivante.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-30">
+                    <div class="col-sm-12">
+                        <div class="schedule-box maxwidth500 bg-lighter mb-30">
+                            <div class="schedule-details clearfix p-15 pt-10">
+                                <h4 class="title bg-danger p-25 text-center text-white mt-0">Comment ?</h4>
                                 <div class="clearfix"></div>
                                 <p class="mt-10">
                                     Inscrivez-vous sur la plateforme via le formulaire Demander de l’aide.
@@ -123,41 +160,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <div class="schedule-box maxwidth500 bg-lighter mb-30">
-                            <div class="schedule-details clearfix p-15 pt-10">
-                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Quoi ?</h4>
-                                <div class="clearfix"></div>
-                                <p class="mt-10">
-                                    <a class="text-theme-colored" href="{{ path('who_are_we') }}">La Gestalt thérapie</a>, en tant que thérapie humaniste et relationnelle,
-                                    est tout particulièrement adaptée à ces situations.
-                                    Un.e thérapeute est une personne avec des compétences professionnelles qui offre un
-                                    cadre sécurisant pour vous accompagner dans ce que vous vivez en ce moment. Parler,
-                                    échanger, être accompagné.e, même sans difficultés aiguës, vous permet de mieux prendre soin de vous et des autres.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <div class="schedule-box maxwidth500 bg-lighter mb-30">
-                            <div class="schedule-details clearfix p-15 pt-10">
-                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Et après ?</h4>
-                                <div class="clearfix"></div>
-                                <p class="mt-10">
-                                    D'une manière générale, ce dispositif vous offre un soutien de 5 séances sur l'ensemble de la durée du
-                                    confinement. C'est une plateforme temporaire destinée à répondre à une urgence liée à la crise du Covid-19.
-                                </p>
-                                <p>
-                                    Le fonctionnement de la plateforme pourra etre prolongé en fonction de l'évolution de la situation.
-                                    L'information sera communiquée sur le site en temps voulu.
-                                </p>
-                                <p>
-                                    Vous pouvez prendre plusieurs rendez-vous avec le ou la même thérapeute en recherchant son
-                                    nom mais vous pouvez également faire appel à un.e autre thérapeute la fois suivante.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -168,7 +170,7 @@
             <div class="section-content">
                 <div class="row">
                     <div class="col-md-7 mb-sm-40">
-                        <h3 class="pb-10">Si vous proposez de l'aide :</h3>
+                        <h3 class="pb-10 text-theme-colored">Si vous proposez de l'aide :</h3>
                         <p>
                             Vous souhaitez mettre vos compétences au service des personnes ressentant le besoin d'un soutien psychologique en cette période de covid-19.
                         </p>
@@ -191,7 +193,7 @@
                     <div class="col-sm-12 col-md-6 col-lg-6">
                         <div class="schedule-box maxwidth500 bg-lighter mb-30">
                             <div class="schedule-details clearfix p-15 pt-10">
-                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Comment ?</h4>
+                                <h4 class="title bg-danger p-25 text-center text-white mt-0">Comment ?</h4>
                                 <div class="clearfix"></div>
                                 <p class="mt-10">
                                     Une fois complété le formulaire ci-dessous, vous
@@ -212,9 +214,9 @@
                     <div class="col-sm-12 col-md-6 col-lg-6">
                         <div class="schedule-box maxwidth500 bg-lighter mb-30">
                             <div class="schedule-details clearfix p-15 pt-10">
-                                <h4 class="title bg-danger p-25 text-center font-30 text-white mt-0">Cadre</h4>
+                                <h4 class="title bg-danger p-25 text-center text-white mt-0">Cadre</h4>
                                 <div class="clearfix"></div>
-                                <h5 class="line-bottom">Conditions d’inscription de la plateforme :</h5>
+                                <p class="line-bottom">Conditions d’inscription de la plateforme.</p>
                                 <p class="mt-10">Pour être présent.e sur la plateforme, vous vous engagez à :</p>
                                 <ul class="text-left list-dashed">
                                     <li>

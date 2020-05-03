@@ -9,9 +9,9 @@
 {% block body %}
     <section>
         <div class="container">
-            <div class="row">
-                <div class="col-md-6 col-md-push-3">
-                    <h4 class="text-gray mt-0 pt-5">Accédez à votre compte</h4>
+            <div class="row text-center d-flex flex-column justify-content-center align-content-center">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <h4 class="text-gray f-cavolini-w mt-0 pt-5">Accédez à votre compte</h4>
                     <hr>
                     {% if error %}
                         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -45,8 +45,8 @@
                         <div class="clear text-center pt-10">
                             <a class="text-theme-colored font-weight-600 font-12" href="{{ path('forgot_password') }}">J'ai oublié mon mot de passe</a>
                         </div>
-                        <div class="clear text-center pt-10">
-                            <button type="submit" class="btn btn-dark btn-lg btn-block no-border mt-15 mb-15">Connexion</button>
+                        <div class="clear pt-10">
+                            <button type="submit" class="btn btn-theme-colored btn-lg btn-block no-border mt-15 mb-15">Connexion</button>
                         </div>
                     </form>
                 </div>

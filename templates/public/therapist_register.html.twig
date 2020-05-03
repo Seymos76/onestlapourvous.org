@@ -13,8 +13,8 @@
             <!-- Section Content -->
             <div class="section-content text-center">
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-2 text-center">
-                        <h1 class="text-uppercase text-white font-30">JE SUIS PRATICIEN.NE EN GESTALT-THÉRAPIE
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                        <h1 class="text-uppercase text-white">JE SUIS PRATICIEN.NE EN GESTALT-THÉRAPIE
                             ET JE PROPOSE MON AIDE</h1>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
             <div class="section-content">
                 <div class="row">
                     <div class="col-md-4">
-                        <h2 class="f-montserrat-light-w">Apporter du soutien</h2>
+                        <h2 class="">Apporter du soutien</h2>
                         <p>
                             Une fois complété le formulaire ci-dessous, vous recevrez un mail de confirmation avec les informations nécessaires au bon
                             déroulement de votre participation.
@@ -109,7 +109,7 @@
                             Vous êtes libre de définir la durée des séances. Une fois la
                             séance passée, vous avez la possibilité de renseigner dans l’historique si elle a bien été honorée.
                         </p>
-                        <img src="{{ asset('images/enlien_sil_2.png') }}"/>
+                        <img src="{{ asset('images/last/enlien_sil.png') }}" alt="soutien"/>
                     </div>
                     <div class="col-md-8">
                         {{ form_start(form, {
@@ -122,7 +122,7 @@
                             <a href="#" class="icon icon-bordered icon-rounded icon-sm pull-left mb-0 mr-10">
                                 <i class="pe-7s-users"></i>
                             </a>
-                            <h4 class="f-montserrat-light-w text-gray pt-10 mt-0 mb-30">Remplissez le formulaire</h4>
+                            <h4 class="text-gray pt-10 mt-0 mb-30">Remplissez le formulaire</h4>
                         </div>
                         <hr>
                         <p class="text-gray">
@@ -200,8 +200,8 @@
                                 {{ form_widget(form.hasAcceptedTermsAndPolicies) }} J'ai lu et j'accepte la <a href="{{ path('data_privacy_policy') }}">Politique de Confidentialité</a> et les <a href="{{ path('terms_of_use') }}">Conditions d'utilisation</a> de enlienavecvous.org
                             </div>
                         </div>
-                        <div class="form-group">
-                            <button class="btn btn-theme-colored btn-lg btn-block mt-15" type="submit">Valider mon inscription</button>
+                        <div class="form-group text-center">
+                            <button class="btn btn-theme-colored text-uppercase btn-lg mt-15" type="submit">Valider mon inscription</button>
                         </div>
                         {{ form_end(form) }}
                     </div>

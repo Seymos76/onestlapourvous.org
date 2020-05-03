@@ -18,8 +18,8 @@
                 <div class="col-md-12">
                     <div class="call-to-action bg-theme-colored-lighter border-radius-5px">
                         <div class="col-md-12 text-center">
-                            <h3 class="text-theme-colored mt-15">Réseau de soutien psychologique durant la crise du Covid-19</h3>
-                            <h3 class="text-theme-colored mt-15">L’approche de la Gestalt-thérapie au service du plus grand nombre</h3>
+                            <h4 class="text-theme-colored mt-15">Réseau de soutien psychologique bénévole durant la crise du Covid-19.</h4>
+                            <h4 class="text-theme-colored mt-15">L’approche de la Gestalt-thérapie au service du plus grand nombre.</h4>
                         </div>
                     </div>
                 </div>
@@ -28,14 +28,16 @@
     </section>
 
     <!-- center + add instagram -->
-    <section data-margin-bottom="-50px">
+    <section data-margin-bottom="-50px" id="home_section_sharing">
         <div class="container">
             <div class="call-to-action text-center pt-20 pb-20">
                 <div class="row">
-                    <div class="col-md-4 col-md-offset-2">
-                        <h3 class="mt-0 text-black">Je partage l'initiative</h3>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                        <h4 class="mt-0 text-black text-uppercase f-montserrat-r-w">Je partage l'initiative</h4>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
                         <a class="btn btn-default btn-sm" href="https://www.facebook.com/sharer/sharer.php?u={{ url('index')|url_encode }}" title="Partager sur Facebook" target="_blank" rel="noreferrer noopener">
                             <i class="fa fa-facebook"></i>
                         </a>
@@ -48,62 +50,63 @@
         </div>
     </section>
 
-    <section>
-        <div class="container mt-20" id="home_section_2">
+    <section id="home_section_2">
+        <div class="container mt-20">
             <div class="section-content">
                 <div class="row equal-height-inner home-boxes">
                     <div class="col-sm-12 col-md-6 pr-0 pr-sm-15 sm-height-auto mt-sm-0 wow fadeInUp" data-wow-duration="0.6s" data-wow-delay="0.1s">
-                        <div class="sm-height-auto bg-theme-colored p-25">
-                            <div class="p-30 mb-sm-30">
-                                <h3 class="text-uppercase text-white mt-0 f-cavolini-w"><em>J'ai besoin d'aide</em></h3>
-                                <p class="text-white font-18 f-montserrat-light">La crise actuelle vous confronte à des situations déstabilisantes :</p>
-                                <p class="text-white font-18 f-montserrat-light">
-                                    Perte de repères et de rythme, manque d’intimité,
-                                    présence constante des enfants, inquiétudes quant à
-                                    l’avenir, solitude, peur du virus.
-                                </p>
-                                <p class="text-white font-18 f-montserrat-light">
-                                    Nombreuses sont les
-                                    peurs ou le mal-être qui peuvent émerger. Ne restez pas
-                                    seul.e face à ces difficultés. Contactez-nous.
-                                </p>
-                                <a href="{{ path('ask_for_help') }}" class="btn btn-border btn-transparent btn-lg f-montserrat-r-w font-18">Demander de l'aide</a>
-                            </div>
+                        <div class="sm-height-auto bg-theme-colored p-50 mb-sm-30 d-flex flex-column align-content-between">
+                            <h3 class="text-uppercase text-white mt-0 f-cavolini-w"><em>J'ai besoin d'aide</em></h3>
+                            <p class="text-white f-montserrat-light">La crise actuelle vous confronte à des situations déstabilisantes :</p>
+                            <p class="text-white text-justify f-montserrat-light">
+                                Perte de repères et de rythme, manque d’intimité,
+                                présence constante des enfants, inquiétudes quant à
+                                l’avenir, solitude, peur du virus.
+                            </p>
+                            <p class="text-white text-justify f-montserrat-light">
+                                Nombreuses sont les
+                                peurs ou le mal-être qui peuvent émerger. Ne restez pas
+                                seul.e face à ces difficultés. Contactez-nous.
+                            </p>
+                            <a href="{{ path('ask_for_help') }}"
+                               class="btn btn-border btn-transparent btn-lg f-montserrat-r-w text-uppercase align-self-start">
+                                Demander de l'aide
+                            </a>
                             <i class="flaticon-charity-shaking-hands-inside-a-heart bg-icon"></i>
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-6 pr-0 pr-sm-15 sm-height-auto mt-sm-0 wow fadeInUp" data-wow-duration="0.6s" data-wow-delay="0.1s">
-                        <div class="sm-height-auto bg-theme-colored-lighter p-25">
-                            <div class="p-30 mb-sm-30">
-                                <h3 class="text-uppercase text-theme-colored mt-0 f-cavolini-w"><em>Je suis thérapeute gestalt et je rejoins le mouvement</em></h3>
-                                <p class="text-theme-colored font-18 f-montserrat-light">Vous êtes thérapeute ou praticien.ne Gestalt ?</p>
-                                <p class="text-theme-colored font-18 f-montserrat-light">
-                                    Dans un élan de solidarité nationale, face à cette
-                                    crise sanitaire sans précédent qui bouleverse nos
-                                    vies, vous avez à cœur de vous rendre utile en
-                                    mettant vos compétences au service du plus grand
-                                    nombre. Rejoignez-nous !
-                                </p>
-                                <a href="{{ path('therapist_register') }}" class="btn btn-border btn-transparent btn-lg text-theme-colored border-theme-colored f-montserrat-r-w font-18">Proposer mon aide</a>
-                            </div>
+                        <div class="sm-height-auto bg-theme-colored-lighter p-50 mb-sm-30 d-flex flex-column align-content-between">
+                            <h3 class="text-uppercase text-theme-colored mt-0 f-cavolini-w"><em>Je suis thérapeute gestalt et je rejoins le mouvement</em></h3>
+                            <p class="text-theme-colored f-montserrat-light">Vous êtes thérapeute ou praticien.ne Gestalt ?</p>
+                            <p class="text-theme-colored text-justify f-montserrat-light">
+                                Dans un élan de solidarité nationale, face à cette
+                                crise sanitaire sans précédent qui bouleverse nos
+                                vies, vous avez à cœur de vous rendre utile en
+                                mettant vos compétences au service du plus grand
+                                nombre. Rejoignez-nous !
+                            </p>
+                            <a href="{{ path('therapist_register') }}"
+                               class="btn btn-border btn-transparent btn-lg text-theme-colored border-theme-colored f-montserrat-r-w text-uppercase align-self-start"
+                            >Proposer mon aide</a>
                             <i class="flaticon-charity-home-insurance bg-icon"></i>
                         </div>
                     </div>
                 </div>
                 <div class="divider call-to-action text-center pt-50 pb-50">
-                    <a href="{{ path('how_it_works') }}" class="btn btn-theme-colored btn-lg mr-10">Comment ça marche ?</a>
+                    <a href="{{ path('how_it_works') }}" class="btn btn-theme-colored text-uppercase btn-lg f-montserrat-r-w">Comment ça marche ?</a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Divider: Become a Volunteer -->
-    <section class="divider parallax" data-bg-img="{{ asset('images/enlien_mains_1280.png') }}" data-parallax-ratio="0.7">
+    <section class="divider parallax" data-bg-img="{{ asset('images/last/enlien_mains.png') }}" data-parallax-ratio="0.7" id="home_section_3">
         <div class="container pt-110 pb-110">
             <div class="row">
                 <div class="col-md-8">
-                    <h3 class="text-black font-24 f-montserrat-light-w mb-5">Une urgence ?</h3>
-                    <h2 class="text-black font-36 text-uppercase f-montserrat-r-w mt-0 text-uppercase">
+                    <h3 class="text-black f-montserrat-light-w mb-5">Une urgence ?</h3>
+                    <h2 class="text-black text-uppercase f-montserrat-r-w mt-0 text-uppercase">
                         <span class="text-theme-colored">Ne restez pas seul.e</span> face à une situation difficile
                     </h2>
                     <p class="text-black f-montserrat-light-w">Si votre vie ou celle d’autrui est en danger, contactez les numéros d’urgence de votre pays.</p>

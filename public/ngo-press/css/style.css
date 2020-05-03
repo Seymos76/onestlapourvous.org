@@ -10,17 +10,37 @@ theme. But don't modify style-main.css file.
 /* Your custom css codes start here: */
 
 @font-face {
-    font-family: "Cavolini Regular";
-    src: local("./../fonts/cavolini/Cavolini-Regular.ttf");
+    font-family: 'Cavolini Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Cavolini Regular'), url('./../fonts/cavolini/CAVOLINI.woff') format('woff');
+}
+@font-face {
+    font-family: 'Cavolini Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Cavolini Italic'), url('./../fonts/cavolini/CAVOLINIITALIC.woff') format('woff');
+}
+@font-face {
+    font-family: 'Cavolini Bold';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Cavolini Bold'), url('./../fonts/cavolini/CAVOLINIBOLD.woff') format('woff');
+}
+@font-face {
+    font-family: 'Cavolini Bold Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Cavolini Bold Italic'), url('./../fonts/cavolini/CAVOLINIBOLDITALIC.woff') format('woff');
 }
 
 @font-face {
     font-family: "Montserrat Regular";
-    src: local("./../fonts/montserrat/Montserrat-Regular.ttf");
+    src: local('Montserrat Regular'), url("./../fonts/montserrat/Montserrat-Regular.ttf") format('ttf');
 }
 @font-face {
     font-family: "Montserrat Light";
-    src: local("./../fonts/montserrat/Montserrat-Light.ttf");
+    src: local('Montserrat Light'), url("./../fonts/montserrat/Montserrat-Light.ttf") format('ttf');
 }
 
 .f-cavolini {
@@ -28,45 +48,81 @@ theme. But don't modify style-main.css file.
 }
 .f-cavolini-w {
     font-family: "Cavolini Regular", sans-serif;
-    font-weight: 800 !important;
+    font-weight: 800;
 }
 .f-montserrat-light {
     font-family: "Montserrat Light", sans-serif;
 }
 .f-montserrat-light-w {
     font-family: "Montserrat Light", sans-serif;
-    font-weight: 500 !important;
+    font-weight: 500;
 }
 .f-montserrat-r-w {
     font-family: "Montserrat Regular", sans-serif;
-    font-weight: 500 !important;
+    font-weight: 500;
 }
 
 /**
  * Common
  */
 html, body {
-    font-family: "Montserrat Light", sans-serif;
+    font-family: "Montserrat Regular", sans-serif !important;
 }
 
 section.inner-header h1 {
     font-family: "Cavolini Regular", sans-serif !important;
     font-weight: 400 !important;
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 2rem;
+    font-family: "Montserrat Light", sans-serif;
+    font-weight: 500;
+}
+h3 {
+    font-size: 1.7rem;
+    font-family: "Montserrat Light", sans-serif;
+    font-weight: 500;
+}
+h4 {
+    font-size: 1.5rem;
+    font-family: "Montserrat Light", sans-serif;
+}
+h5 {
+    font-size: 1.4rem;
+    font-family: "Montserrat Light", sans-serif;
 }
 
 .menuzord-brand img {
     max-height: 60px !important;
 }
 
+p {
+    text-align: justify;
+    font-family: 'Montserrat Light', sans-serif;
+    font-size: 1.2rem;
+}
+
+button[type="submit"],a.btn {
+    text-transform: uppercase;
+    font-family: "Montserrat Regular", sans-serif;
+    font-weight: bolder !important;
+}
+
+blockquote p {
+    font-size: 1.4rem;
+}
+
 /**
  * Homepage
  */
-#home_section_1 h3 {
-    font-family: "Montserrat Light", sans-serif;
+#home_section_1 h4 {
+    font-family: "Montserrat Light", sans-serif !important;
 }
 
-#home_section_2 h3 {
-    font-family: "Cavolini Regular", sans-serif;
+#home_section_2 .home-boxes > div > h3 {
+    font-family: "Cavolini Regular", sans-serif !important;
     font-weight: bold;
 }
 #home_section_2 p {
@@ -78,6 +134,9 @@ section.inner-header h1 {
 #home_section_2 .call-to-action a {
     font-family: "Montserrat Regular", sans-serif;
 }
+#home_section_3 p {
+    font-size: 1.5rem;
+}
 
 /**
  * Ask for help
@@ -87,7 +146,7 @@ section.inner-header h1 {
     text-transform: uppercase;
 }
 
-section#about h2 {
+section#ask_for_help_section_about h2 {
     font-family: "Montserrat Light", sans-serif;
     font-weight: 600;
 }
@@ -96,13 +155,30 @@ form input {
 }
 
 /**
+ * Terms of use
+ */
+a.list-group-item {
+    font-family: "Montserrat Light", sans-serif;
+}
+
+/**
+ * How it works
+ */
+ul.list-dashed li {
+    font-size: 1rem;
+    padding: 5px;
+}
+
+/**
  * Footer
  */
 #footer h5#widget-title {
-    font-family: "Montserrat Regular";
-    font-weight: 500;
+    font-family: "Montserrat Light", sans-serif;
+    font-weight: bold;
+    font-size: 1.4rem;
 }
-#footer ul.angle-double-right {
-    font-family: "Montserrat Light";
+#footer ul.angle-double-right li {
+    font-family: "Montserrat Light", sans-serif;
     font-weight: 500;
+    font-size: 1rem;
 }
