@@ -109,8 +109,8 @@ class TherapistController extends AbstractController
             $mailerFactory->createAndSend(
                 "3 rdv non honorés...",
                 '$to',
-                null,
-                $this->renderView('email/patient_malus.html.twig', ['patient' => $patient])
+                $this->renderView('email/patient_malus.html.twig', ['patient' => $patient]),
+                null
             );
         }
         $appointment->setStatus($status);
@@ -159,7 +159,6 @@ class TherapistController extends AbstractController
             $mailer->createAndSend(
                 "Annulation du rendez-vous",
                 $patientEmail,
-                null,
                 $this->renderView(
                     'email/appointment_cancelled_from_therapist.html.twig',
                     [
@@ -168,7 +167,8 @@ class TherapistController extends AbstractController
                             ? getenv('project_url')
                             : $this->getParameter('project_url')
                     ]
-                )
+                ),
+                null
             );
             $currentUser->removeAppointment($appointment);
             $entityManager->remove($appointment);
@@ -351,11 +351,11 @@ class TherapistController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Changement de votre adresse email",
                     $user->getEmail(),
-                    null,
                     $this->renderView(
                         'email/user_change_email.html.twig',
                         ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
-                    )
+                    ),
+                    null
                 );
                 $manager->flush();
                 $this->addFlash('success', "Vous allez recevoir un mail pour confirmer votre nouvelle adresse email.");
@@ -424,8 +424,8 @@ class TherapistController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Suppression de votre compte",
                     $user->getEmail(),
-                    null,
-                    $this->renderView('email/user_delete_account.html.twig')
+                    $this->renderView('email/user_delete_account.html.twig'),
+                    null
                 );
                 // delete user
                 $manager->remove($user);

@@ -18,7 +18,7 @@ class MailerFactory
         $this->entityManager = $entityManager;
     }
 
-    public function createAndSend(string $subject, string $to, string $from, string $body)
+    public function createAndSend(string $subject, string $to, string $body, string $from = null)
     {
         $message = (new \Swift_Message($subject))
             ->setTo($to)

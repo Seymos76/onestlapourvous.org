@@ -111,7 +111,8 @@ button[type="submit"],a.btn {
 }
 
 blockquote p {
-    font-size: 1.4rem;
+    font-family: 'Cavolini Regular', sans-serif;
+    font-size: 1.2rem;
 }
 
 /**
@@ -119,6 +120,33 @@ blockquote p {
  */
 #home_section_1 h4 {
     font-family: "Montserrat Light", sans-serif !important;
+}
+
+#home_section_2 .home_box {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-content: stretch;
+    padding: 50px;
+}
+#home_section_2 .home_box>*:nth-child(2) {
+    min-height: 370px;
+}
+@media screen and (max-width: 1024px) {
+    #home_section_2 .home_box {
+        padding: 30px;
+    }
+    #home_section_2 .home_box>*:nth-child(2) {
+        min-height: 250px;
+    }
+}
+@media screen and (max-width: 360px) {
+    #home_section_2 .home_box {
+        padding: 15px;
+    }
+}
+#home_section_2 .home_box a.btn {
+    align-self: flex-start;
 }
 
 #home_section_2 .home-boxes > div > h3 {
@@ -165,8 +193,15 @@ a.list-group-item {
  * How it works
  */
 ul.list-dashed li {
-    font-size: 1rem;
+    font-size: 1.2rem;
     padding: 5px;
+}
+
+/**
+ * Who are we
+ */
+ul.angle-double-right li {
+    font-size: 1.2rem;
 }
 
 /**

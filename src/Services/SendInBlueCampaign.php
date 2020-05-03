@@ -13,7 +13,6 @@ class SendInBlueCampaign
         'ROLE_PATIENT' => 1,
         'ROLE_THERAPIST' => 2
     ];
-    private $apiKey = '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';
 
     public function createAndSend(
         string $campaignName,
@@ -23,7 +22,7 @@ class SendInBlueCampaign
         ?\DateTime $scheduledAt = null
     )
     {
-        Configuration::getDefaultConfiguration()->setApiKey("api-key", $this->apiKey);
+        Configuration::getDefaultConfiguration()->setApiKey("api-key", $_ENV['SENDINBLUE_API_KEY']);
         $apiInstance = new EmailCampaignsApi();
         $emailCampaigns = new CreateEmailCampaign();
 

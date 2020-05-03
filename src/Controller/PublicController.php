@@ -90,11 +90,11 @@ class PublicController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Validation de votre inscription",
                     $user->getEmail(),
-                    'accueil@enlienavecvous.org',
                     $this->renderView(
                         'email/patient_registration.html.twig',
                         ['email_token' => $emailToken, 'project_url' => $_ENV['PROJECT_URL']]
-                    )
+                    ),
+                    null
                 );
                 $entityManager->persist($user);
                 $entityManager->flush();
@@ -135,14 +135,14 @@ class PublicController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Réinitialisation de votre mot de passe",
                     $user->getEmail(),
-                    null,
                     $this->renderView(
                         'email/user_reset_email.html.twig',
                         [
                             'project_url' => $_ENV['PROJECT_URL'],
                             'token' => $user->getPasswordResetToken()
                         ]
-                    )
+                    ),
+                    null
                 );
                 $this->addFlash('success', "Un email vous a été envoyé, pensez à vérifier vos spams.");
                 return $this->redirectToRoute('forgot_password');
@@ -191,10 +191,10 @@ class PublicController extends AbstractController
             $mailerFactory->createAndSend(
                 "Mot de passe réinitialisé",
                 $user->getEmail(),
-                null,
                 $this->renderView(
                     'email/user_reset_password_success.html.twig'
-                )
+                ),
+                null
             );
             $manager->flush();
             $this->addFlash('success', "Vous pouvez désormais vous connecter avec votre nouveau mot de passe.");;
@@ -282,11 +282,11 @@ class PublicController extends AbstractController
                 $mailer->createAndSend(
                     "Validation de votre inscription",
                     $user->getEmail(),
-                    'accueil@enlienavecvous.org',
                     $this->renderView(
                         'email/therapist_registration.html.twig',
                         ['email_token' => $emailToken, 'project_url' => $_ENV['PROJECT_URL']]
-                    )
+                    ),
+                    null
                 );
                 $entityManager->persist($user);
                 $entityManager->flush();

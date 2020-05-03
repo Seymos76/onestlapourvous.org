@@ -136,21 +136,21 @@ class ManagerController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Validation de votre inscription",
                     $user->getEmail(),
-                    'accueil@enlienavecvous.org',
                     $this->renderView(
                         'email/therapist_registration.html.twig',
                         ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
-                    )
+                    ),
+                    null
                 );
             } else {
                 $mailerFactory->createAndSend(
                     "Validation de votre inscription",
                     $user->getEmail(),
-                    'accueil@enlienavecvous.org',
                     $this->renderView(
                         'email/patient_registration.html.twig',
                         ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
-                    )
+                    ),
+                    null
                 );
             }
 
@@ -176,11 +176,11 @@ class ManagerController extends AbstractController
             $mailerFactory->createAndSend(
                 "Activation de votre compte",
                 $user->getEmail(),
-                'accueil@enlienavecvous.org',
                 $this->renderView(
                     'email/user_activated.html.twig',
                     ['project_url' => $_ENV['PROJECT_URL']]
-                )
+                ),
+                null
             );
             $manager->flush();
             $this->addFlash('success', "Utilisateur activé.");
@@ -420,14 +420,14 @@ class ManagerController extends AbstractController
                 $mailerFactory->createAndSend(
                     $subject,
                     $email,
-                    null,
                     $this->renderView(
                         'email/manager_contact_user.html.twig',
                         [
                             'subject' => $subject,
                             'message' => $message
                         ]
-                    )
+                    ),
+                    null
                 );
                 $this->addFlash('success', "Message envoyé aux à {$email}.");
             } else {
@@ -532,8 +532,8 @@ class ManagerController extends AbstractController
             $mailerFactory->createAndSend(
                 "Suppression de votre compte",
                 $user->getEmail(),
-                'accueil@enlienavecvous.org',
-                $this->renderView('email/user_delete_account.html.twig')
+                $this->renderView('email/user_delete_account.html.twig'),
+                null
             );
             // delete user
             $manager->remove($user);

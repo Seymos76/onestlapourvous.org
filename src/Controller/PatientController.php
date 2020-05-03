@@ -93,8 +93,8 @@ class PatientController extends AbstractController
             $mailerFactory->createAndSend(
                 "Annulation du rendez-vous",
                 $appointment->getTherapist()->getEmail(),
-                null,
-                $this->renderView('email/appointment_cancelled_from_patient.html.twig', ['appointment' => $appointment])
+                $this->renderView('email/appointment_cancelled_from_patient.html.twig', ['appointment' => $appointment]),
+                null
             );
             $appointment->setPatient(null);
             $appointment->setStatus(Appointment::STATUS_AVAILABLE);
@@ -181,16 +181,15 @@ class PatientController extends AbstractController
             $mailerFactory->createAndSend(
                 "Confirmation de rendez-vous",
                 $appointment->getPatient()->getEmail(),
-                null,
-                $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
+                $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment]),
+                null
             );
-            dump($appointment);
 
             $mailerFactory->createAndSend(
                 "Confirmation de rendez-vous",
                 $appointment->getTherapist()->getEmail(),
-                null,
-                $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
+                $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment]),
+                null
             );
             $entityManager->flush();
             $this->addFlash('success', "Votre rendez-vous est confirmé, un mail de confirmation vous a été envoyé !");
@@ -253,11 +252,11 @@ class PatientController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Changement de votre adresse email",
                     $user->getEmail(),
-                    null,
                     $this->renderView(
                         'email/user_change_email.html.twig',
                         ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
-                    )
+                    ),
+                    null
                 );
                 $manager->flush();
                 $this->addFlash('success', "Vous allez recevoir un mail pour confirmer votre nouvelle adresse email.");
@@ -325,8 +324,8 @@ class PatientController extends AbstractController
                 $mailerFactory->createAndSend(
                     "Suppression de votre compte",
                     $user->getEmail(),
-                    null,
-                    $this->renderView('email/user_delete_account.html.twig')
+                    $this->renderView('email/user_delete_account.html.twig'),
+                    null
                 );
                 // delete user
                 $manager->remove($user);

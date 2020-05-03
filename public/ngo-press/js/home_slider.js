@@ -52,7 +52,7 @@ $(document).ready(function(e) {
                 h_offset:0,
                 v_offset:30,
                 space:5,
-                tmp:'<span class="tp-bullet-img-wrap">  <span class="tp-bullet-image"></span></span><span class="tp-bullet-title">Titre</span>'
+                tmp:'<span class="tp-bullet-img-wrap"><span class="tp-bullet-image"></span></span><span class="tp-bullet-title">Titre</span>'
             }
         },
         responsiveLevels: [1240, 1024, 778],

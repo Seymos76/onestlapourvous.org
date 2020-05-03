@@ -130,15 +130,15 @@ class ApiController extends AbstractController
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getPatient()->getEmail(),
-            'accueil@enlienavecvous.org',
-            $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
+            $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment]),
+            null
         );
 
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getTherapist()->getEmail(),
-            'accueil@enlienavecvous.org',
-            $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
+            $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment]),
+            null
         );
 
         $data = $serializer->serialize(
@@ -173,15 +173,15 @@ class ApiController extends AbstractController
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getPatient()->getEmail(),
-            'accueil@enlienavecvous.org',
-            $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment])
+            $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment]),
+            null
         );
 
         $mailer->createAndSend(
             "Confirmation de rendez-vous",
             $appointment->getTherapist()->getEmail(),
-            'accueil@enlienavecvous.org',
-            $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment])
+            $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment]),
+            null
         );
 
         $data = $serializer->serialize(
