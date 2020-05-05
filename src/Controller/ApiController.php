@@ -61,19 +61,37 @@ class ApiController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         AppointmentRepository $appointmentRepository,
-        DepartmentRepository $departmentRepository, UserRepository $userRepository
+        DepartmentRepository $departmentRepository, PatientRepository $patientRepository
     )
     {
         $params = json_decode($request->getContent(), true);
-        $user = $userRepository->find((int)$params["user"]["id"]);
+        dump($params);
+        $user = $patientRepository->find((int)$params["user"]["id"]);
+        dump($user);
         $country = $user->getCountry();
         if ("" !== $params["search"]["department"]) {
-            $department = $departmentRepository->find((int)$params["search"]["department"]);
+            $department = $departmentRepository->find((int)$params["user"]["department"]);
         } else {
             $department = null;
         }
         $appointments = $appointmentRepository->findAvailableBookingsByFilters($country, $department);
         $data = $serializer->serialize($appointments, 'json', ['groups' => ['get_bookings']]);
+        return new JsonResponse($data, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @Route(path="/current/patient", name="api_current_patient", methods={"GET"})
+     * @return JsonResponse
+     */
+    public function getCurrentUserInfo(
+        PatientRepository $patientRepository,
+        SerializerInterface $serializer,
+        Request $request
+    )
+    {
+        $id = $request->query->get('id');
+        $patient = $patientRepository->find($id);
+        $data = $serializer->serialize($patient, 'json', ['groups' => ['user_search']]);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
 

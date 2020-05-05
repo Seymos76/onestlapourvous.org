@@ -142,6 +142,7 @@
                                         </h5>
                                         <span class="email">{{ app.user.email }}</span>
                                     </div>
+                                    {{ dump(app.user) }}
                                 </div>
                                 <div class="account-dropdown__body">
                                     {% if is_granted('ROLE_THERAPIST') %}

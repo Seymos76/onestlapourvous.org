@@ -5,29 +5,28 @@ import BookingConfirmation from "../components/BookingConfirmation";
 import BookingRow from "../components/BookingRow";
 import bookingApi from "../services/bookingApi";
 import bookingFilters from "../utils/bookingFilters";
+import userApi from "../services/userApi";
 import BookingSearchForm from "../components/BookingSearchForm";
 import geolocationApi from "../services/geolocationApi";
 import {toast, ToastContainer} from "react-toastify";
 //import 'react-toastify/dist/ReactToastify.css';
-//import * as Sentry from '@sentry/browser';
-//Sentry.init({dsn: "https://13cbde40e40b44989821c2d5e9b8bafb@o346982.ingest.sentry.io/5211266"});
 
 function PatientSearch() {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [isConfirmed, setIsConfirmed] = useState(false);
     const [user, setUser] = useState({
-        id: document.querySelector('div#patient_search_app').dataset.user,
-        department: document.querySelector('div#patient_search_app').dataset.defaultDepartment
+        id: null,
+        country: null,
+        department: null
     });
     const [appoints, setAppoints] = useState([]);
     const [filtered, setFiltered] = useState([]);
     const [booking, setBooking] = useState({});
     const [departments, setDepartments] = useState([]);
     const [search, setSearch] = useState({
-        bookingDate: '',
-        country: document.querySelector('div#patient_search_app').dataset.country,
-        department: '',
+        bookingDate: null,
+        department: null,
     });
 
     const handlePageChange = page => {
@@ -54,17 +53,31 @@ function PatientSearch() {
         }
     }
 
-    const resetSearch = () => {
+    const setCurrentUser = async () => {
+        const $targetElement = document.getElementById("patient_search");
+        if ($targetElement !== null) {
+            const $targetData = $targetElement.dataset;
+            console.log('dataset:',$targetData);
+            const userId = $targetData.user;
+            //const patient = await userApi.getCurrentPatient(userId);
+            //console.log('user:',patient);
+            const country = $targetData.country;
+            const department = $targetData.defaultDepartment;
+            setUser({ id: userId, country, department });
+            return country;
+        }
+    }
+
+    const resetSearch = async () => {
         setLoading(true);
         localStorage.getItem('booking') && localStorage.removeItem('booking');
         setIsConfirmed(false);
         setBooking({});
-        updateBookingsByApiFilters();
+        await updateBookingsByApiFilters();
         setLoading(false);
     }
 
-    const getCountryDepartments = async () => {
-        const country = document.querySelector('div#patient_search_app').dataset.country;
+    const getCountryDepartments = async (country) => {
         const departments = await geolocationApi.getDepartmentsByCountry(country);
         setDepartments(departments);
     }
@@ -79,12 +92,7 @@ function PatientSearch() {
             return;
         }
         setBooking(booking);
-        const saved = bookingFilters.setBookingToLocalStorage(booking);
-        if (saved) {
-            toast.success("Veuillez confirmer cette réservation ou l'annuler en cas d'erreur.");
-        } else {
-            toast.error("Une erreur s'est produite lors de la sauvegarde de la réservation.");
-        }
+        bookingFilters.setBookingToLocalStorage(booking);
     }
 
     const updateAppointsByUserFilters = () => {
@@ -94,7 +102,6 @@ function PatientSearch() {
 
     const updateBookingsByApiFilters = async () => {
         const bookings = await bookingApi.updateBookingsByFilters(search, user);
-
         if (bookings.length > 0) {
             const appoints = filterWithTherapistDelay(bookings);
             setAppoints(appoints);
@@ -106,11 +113,9 @@ function PatientSearch() {
     }
 
     const cancelBooking = () => {
-        // delete local storage
         if (localStorage.getItem('booking')) {
             localStorage.removeItem('booking');
         }
-        // delete booking state
         setBooking({});
     }
 
@@ -123,20 +128,34 @@ function PatientSearch() {
     ) : appointsToDisplay;
 
     useEffect(() => {
-        setLoading(true);
-        getCountryDepartments();
-        updateBookingsByApiFilters();
-        setLoading(false);
+        (async function initUser() {
+            const country = await setCurrentUser();
+            console.log('init user');
+            await getCountryDepartments(country);
+            console.log('init departments');
+        })();
     }, []);
 
     useEffect(() => {
+        (async function initBookings() {
+            await updateBookingsByApiFilters();
+            console.log('init bookings');
+        })();
+        setLoading(false);
+    }, [user.department]);
+
+    useEffect(() => {
         setLoading(true);
-        updateBookingsByApiFilters();
+        (async function departmentSearchUpdate() {
+            await updateBookingsByApiFilters();
+            console.log('department search update');
+        })();
         setLoading(false);
     },[search.department]);
 
     useEffect(() => {
         updateAppointsByUserFilters();
+        console.log('filters update');
     },[search.bookingDate]);
 
     return (

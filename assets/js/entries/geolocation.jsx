@@ -116,7 +116,9 @@ export function Geolocation() {
     }
 
     useEffect(() => {
-        getDepartmentsByCountry();
+        (async function updateDepartments() {
+            await getDepartmentsByCountry();
+        })();
     }, [selection.country]);
 
     return (

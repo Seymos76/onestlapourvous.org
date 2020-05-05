@@ -2,7 +2,11 @@
     "devDependencies": {
         "@symfony/webpack-encore": "^0.28.2",
         "core-js": "^3.0.0",
+        "css": "^2.2.4",
+        "css-loader": "^3.5.3",
         "dotenv": "^8.2.0",
+        "less": "^3.11.1",
+        "less-loader": "^4.1.0",
         "regenerator-runtime": "^0.13.2",
         "webpack-notifier": "^1.6.0"
     },
@@ -24,10 +28,10 @@
         "@babel/preset-react": "^7.9.4",
         "@sentry/browser": "^5.15.5",
         "axios": "^0.19.2",
-        "bootstrap-select": "^1.13.12",
+        "bootstrap-select": "^1.13.16",
         "ckeditor": "^4.12.1",
         "jquery": "^2.2.4",
-        "moment": "^2.24.0",
+        "moment": "^2.25.2",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "react-toastify": "^5.5.0"

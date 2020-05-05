@@ -14,10 +14,7 @@
         <link rel="stylesheet" href="{{ asset('ngo-press/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('ngo-press/css/jquery-ui.min.css') }}">
         <link rel="stylesheet" href="{{ asset('ngo-press/css/animate.css') }}">
-        <!--<link rel="stylesheet" href="{{ asset('ngo-press/css/css-plugin-collections.css') }}">-->
-        <!--<link rel="stylesheet" href="{{ asset('ngo-press/css/menuzord-skins/menuzord-rounded-boxed.css') }}">-->
         <link rel="stylesheet" href="{{ asset('ngo-press/css/style-main.css') }}">
-        <!--<link rel="stylesheet" href="{{ asset('ngo-press/css/preloader.css') }}">-->
         <link rel="stylesheet" href="{{ asset('ngo-press/css/custom-bootstrap-margin-padding.css') }}">
         <link rel="stylesheet" href="{{ asset('ngo-press/css/responsive.css') }}">
         <link rel="stylesheet" href="{{ asset('ngo-press/css/colors/theme-skin-red.css') }}">
@@ -53,10 +50,12 @@
     <script src="{{ asset('ngo-press/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('ngo-press/js/jquery-plugin-collection.js') }}"></script>
     <script src="{{ asset('ngo-press/js/custom.js') }}"></script>
+    {% if app.environment is same as('prod') %}
     <script src="https://browser.sentry-cdn.com/5.15.5/bundle.min.js" integrity="sha384-wF7Jc4ZlWVxe/L8Ji3hOIBeTgo/HwFuaeEfjGmS3EXAG7Y+7Kjjr91gJpJtr+PAT" crossorigin="anonymous"></script>
     <script>
         Sentry.init({ dsn: 'https://3b61aebe42f04e79a64d0ede0e6b2ab7@o384906.ingest.sentry.io/5217092' });
     </script>
+    {% endif %}
 {% endblock %}
 </body>
 </html>

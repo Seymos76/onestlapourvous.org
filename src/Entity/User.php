@@ -26,6 +26,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"user_search"})
      */
     protected $id;
 
@@ -75,6 +76,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string")
+     * @Groups({"user_search"})
      */
     protected $country;
 
@@ -112,7 +114,7 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Department", inversedBy="users")
      * @ORM\JoinColumn(nullable=true)
-     * @Groups({"get_bookings"})
+     * @Groups({"get_bookings", "user_search"})
      */
     protected $department;
 
