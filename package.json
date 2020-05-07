@@ -10,8 +10,8 @@
         "regenerator-runtime": "^0.13.2",
         "webpack-notifier": "^1.6.0"
     },
-    "license": "UNLICENSED",
-    "private": true,
+    "license": "GNU",
+    "private": false,
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
@@ -19,7 +19,7 @@
         "build": "encore production --progress"
     },
     "name": "enlienavecvous.org",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "engines": {
         "node": "12.13.x",
         "npm": "6.12.x"

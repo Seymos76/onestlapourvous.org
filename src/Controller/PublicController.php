@@ -178,9 +178,9 @@ class PublicController extends AbstractController
     {
         $token = $request->query->get('token');
         $user = $userRepository->findOneBy(['passwordResetToken' => $token]);
-        if (!$user instanceof User || null === $user->getEmail()) {
+        if (!$user instanceof User) {
             $this->addFlash('error', "Cet utilisateur n'existe pas");
-            return $this->redirectToRoute('index');
+            return $this->redirectToRoute('forgot_password');
         }
         $form = $this->createForm(PasswordResetType::class);
         $form->handleRequest($request);
@@ -218,8 +218,7 @@ class PublicController extends AbstractController
         UserPasswordEncoderInterface $encoder,
         MailerFactory $mailer,
         EntityManagerInterface $entityManager,
-        DepartmentRepository $departmentRepository,
-        TownRepository $townRepository
+        DepartmentRepository $departmentRepository
     )
     {
         $therapist = new Therapist();
