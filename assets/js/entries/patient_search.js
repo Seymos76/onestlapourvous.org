@@ -5,28 +5,25 @@ import BookingConfirmation from "../components/BookingConfirmation";
 import BookingRow from "../components/BookingRow";
 import bookingApi from "../services/bookingApi";
 import bookingFilters from "../utils/bookingFilters";
-import userApi from "../services/userApi";
 import BookingSearchForm from "../components/BookingSearchForm";
 import geolocationApi from "../services/geolocationApi";
-import {toast, ToastContainer} from "react-toastify";
-//import 'react-toastify/dist/ReactToastify.css';
 
 function PatientSearch() {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [isConfirmed, setIsConfirmed] = useState(false);
     const [user, setUser] = useState({
-        id: null,
-        country: null,
-        department: null
+        id: undefined,
+        country: undefined,
+        department: undefined
     });
     const [appoints, setAppoints] = useState([]);
     const [filtered, setFiltered] = useState([]);
     const [booking, setBooking] = useState({});
     const [departments, setDepartments] = useState([]);
     const [search, setSearch] = useState({
-        bookingDate: null,
-        department: null,
+        bookingDate: undefined,
+        department: undefined,
     });
 
     const handlePageChange = page => {
@@ -53,21 +50,6 @@ function PatientSearch() {
         }
     }
 
-    const setCurrentUser = async () => {
-        const $targetElement = document.getElementById("patient_search");
-        if ($targetElement !== null) {
-            const $targetData = $targetElement.dataset;
-            console.log('dataset:',$targetData);
-            const userId = $targetData.user;
-            //const patient = await userApi.getCurrentPatient(userId);
-            //console.log('user:',patient);
-            const country = $targetData.country;
-            const department = $targetData.defaultDepartment;
-            setUser({ id: userId, country, department });
-            return country;
-        }
-    }
-
     const resetSearch = async () => {
         setLoading(true);
         localStorage.getItem('booking') && localStorage.removeItem('booking');
@@ -77,9 +59,11 @@ function PatientSearch() {
         setLoading(false);
     }
 
-    const getCountryDepartments = async (country) => {
-        const departments = await geolocationApi.getDepartmentsByCountry(country);
-        setDepartments(departments);
+    const cancelBooking = () => {
+        if (localStorage.getItem('booking')) {
+            localStorage.removeItem('booking');
+        }
+        setBooking({});
     }
 
     const filterWithTherapistDelay = (appoints) => {
@@ -100,24 +84,70 @@ function PatientSearch() {
         setFiltered(updatedAppoints);
     }
 
+    const getCurrentUser = () => {
+        const $targetElement = document.getElementById("patient_search_app");
+        if ($targetElement !== null) {
+            return $targetElement.dataset;
+            //const userId = $targetData.user;
+            //const country = $targetData.country;
+            //const department = $targetData.defaultDepartment;
+            //setUser({ id: userId, country, department });
+        }
+    }
+
+    const getCountryDepartments = async () => {
+        if (user.country !== undefined) {
+            return await geolocationApi.getDepartmentsByCountry(user.country);
+        }
+    }
+
     const updateBookingsByApiFilters = async () => {
         const bookings = await bookingApi.updateBookingsByFilters(search, user);
         if (bookings.length > 0) {
             const appoints = filterWithTherapistDelay(bookings);
             setAppoints(appoints);
-            toast.info("Disponibilités mises à jour");
         } else {
             setAppoints([]);
-            toast.info("Pas de disponibilité dans ce département");
         }
     }
 
-    const cancelBooking = () => {
-        if (localStorage.getItem('booking')) {
-            localStorage.removeItem('booking');
-        }
-        setBooking({});
-    }
+    useEffect(() => {
+        (async function initStart() {
+            console.log('init user');
+            const { userId, country, department } = {...getCurrentUser()};
+            setUser({ id: userId, country, department: department.id });
+            console.log('user ok');
+            setLoading(false);
+        })();
+    }, []);
+
+    useEffect(() => {
+        setLoading(true);
+        (async function initDepartment() {
+            if (user.country !== undefined) {
+                console.log('init departments');
+                const departments = await geolocationApi.getDepartmentsByCountry(user.country);
+                setDepartments(departments);
+                console.log('departments ok');
+            }
+        })();
+        setLoading(false);
+    },[user]);
+
+    useEffect(() => {
+        setLoading(true);
+        console.log('departments init');
+        setLoading(false);
+    },[departments]);
+
+    useEffect(() => {
+        setLoading(true);
+        (async function departmentSearchUpdate() {
+            await updateBookingsByApiFilters();
+            console.log('department search update');
+        })();
+        setLoading(false);
+    },[search]);
 
     const appointsToDisplay = filtered.length ? filtered : appoints;
 
@@ -127,42 +157,8 @@ function PatientSearch() {
         itemsPerPage
     ) : appointsToDisplay;
 
-    useEffect(() => {
-        (async function initUser() {
-            const country = await setCurrentUser();
-            console.log('init user');
-            await getCountryDepartments(country);
-            console.log('init departments');
-        })();
-    }, []);
-
-    useEffect(() => {
-        (async function initBookings() {
-            await updateBookingsByApiFilters();
-            console.log('init bookings');
-        })();
-        setLoading(false);
-    }, [user.department]);
-
-    useEffect(() => {
-        setLoading(true);
-        (async function departmentSearchUpdate() {
-            await updateBookingsByApiFilters();
-            console.log('department search update');
-        })();
-        setLoading(false);
-    },[search.department]);
-
-    useEffect(() => {
-        updateAppointsByUserFilters();
-        console.log('filters update');
-    },[search.bookingDate]);
-
     return (
         <>
-            {/*<div className="container-fluid">
-                <ToastContainer position={toast.POSITION.TOP_CENTER}/>
-            </div>*/}
             <div className="container-fluid mb-3">
                 {
                     (localStorage.getItem('booking') && booking !== {}) ?
