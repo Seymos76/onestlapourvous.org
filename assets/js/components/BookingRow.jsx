@@ -9,7 +9,7 @@ function BookingRow({ createPatientBooking, booking }) {
                     Réserver
                 </button>
             </td>
-            <td>{booking.therapist?.displayName ?? booking.therapist?.firstName + " " + booking.therapist?.lastName}</td>
+            <td>{booking.therapist?.displayName ?? booking.therapist?.firstName.capitaliseFirstLetter() + " " + booking.therapist?.lastName.toUpperCase()}</td>
             <td>{booking.bookingDate && formatDateForTable(booking.bookingDate)}</td>
             <td>{booking.bookingStart && formatTime(booking.bookingStart)}</td>
             <td>{booking.bookingEnd && formatTime(booking.bookingEnd)}</td>
