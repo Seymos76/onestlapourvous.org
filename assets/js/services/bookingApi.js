@@ -1,7 +1,5 @@
 import axios from "axios";
 import {API_URL} from "../config";
-import UserApi from "./userApi";
-import GeoApi from "./geolocationApi";
 
 async function getBookings() {
     return await axios

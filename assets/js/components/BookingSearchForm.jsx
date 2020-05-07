@@ -11,7 +11,7 @@ function BookingSearchForm({ handleChange, search, departments }) {
                     </fieldset>
                 </div>
                 {
-                    departments && search.department !== undefined &&
+                    departments &&
                     <div className="col-sm-12 col-md-6 col-lg-6">
                         <fieldset className="form-group">
                             <label htmlFor="department">Sélectionnez un département :</label>

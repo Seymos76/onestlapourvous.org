@@ -10,6 +10,7 @@ use App\Entity\EmailReport;
 use App\Entity\History;
 use App\Entity\Patient;
 use App\Entity\Therapist;
+use App\Entity\User;
 use App\Form\AppointmentType;
 use App\Form\ChangePasswordType;
 use App\Form\TherapistAppointmentCancellationMessageType;
@@ -18,6 +19,7 @@ use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\HistoryRepository;
 use App\Repository\TherapistRepository;
+use App\Repository\UserRepository;
 use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
 use Cocur\Slugify\Slugify;
@@ -274,11 +276,16 @@ class TherapistController extends AbstractController
 
     /**
      * @Route(path="/availabilities/{id}/delete", name="therapist_availability_delete")
-     * @ParamConverter(name="id", class="App\Entity\Appointment")
      * @return RedirectResponse
      */
-    public function availabilitiesDelete(Appointment $appointment, EntityManagerInterface $manager): RedirectResponse
+    public function availabilitiesDelete(
+        Request $request,
+        AppointmentRepository $appointmentRepository,
+        EntityManagerInterface $manager
+    ): RedirectResponse
     {
+        $appointId = $request->attributes->get('id');
+        $appointment = $appointmentRepository->find((int)$appointId);
         if (!$appointment || !$appointment instanceof Appointment) {
             $this->addFlash('error', "Créneau introuvable...");
             return $this->redirectToRoute('therapist_availabilities');
@@ -411,40 +418,34 @@ class TherapistController extends AbstractController
     }
 
     /**
-     * @Route(path="/account/delete", name="therapist_account_delete")
+     * @Route(path="/account/delete/{id}", name="therapist_account_delete")
      */
     public function deleteAccount(
         Request $request,
+        UserRepository $userRepository,
         EntityManagerInterface $manager,
-        UserPasswordEncoderInterface $encoder,
         MailerFactory $mailerFactory
     )
     {
-        $user = $this->getCurrentTherapist();
-        if ($user instanceof Therapist) {
-            $userPassword = $request->request->get('password');
-            if ($encoder->isPasswordValid($user, $userPassword)) {
-                // send email account deletion
-                $mailerFactory->createAndSend(
-                    "Suppression de votre compte",
-                    $user->getEmail(),
-                    $this->renderView('email/user_delete_account.html.twig'),
-                    null,
-                    EmailReport::TYPE_ACCOUNT_DELETION
-                );
-                // delete user
-                $manager->remove($user);
-                $manager->flush();
-                // redirect
-                $session = new Session();
-                $session->invalidate();
-                $this->addFlash('success', "Votre compte a été correctement supprimé.");
-                return $this->redirectToRoute('app_logout');
-            } else {
-                $this->addFlash('error', "Votre mot de passe est invalide.");
-                return $this->redirectToRoute('therapist_security');
-            }
+        $user = $userRepository->find($request->attributes->get('id'));
+        if ($user instanceof User) {
+            $mailerFactory->createAndSend(
+                "Suppression de votre compte",
+                $user->getEmail(),
+                $this->renderView('email/user_delete_account.html.twig'),
+                null,
+                EmailReport::TYPE_ACCOUNT_DELETION
+            );
+            // delete user
+            $manager->remove($user);
+            $manager->flush();
+            // redirect
+            $session = new Session();
+            $session->invalidate();
+            $this->addFlash('success', "Votre compte a été correctement supprimé.");
+            return $this->redirectToRoute('app_logout');
         }
+        $this->addFlash('error', "La suppression de votre compte a échoué.");
         return $this->redirectToRoute('therapist_security');
     }
 

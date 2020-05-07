@@ -41,3 +41,8 @@ security:
          - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
          - { path: ^/patient, roles: ROLE_PATIENT }
          - { path: ^/therapeute, roles: ROLE_THERAPIST }
+
+    role_hierarchy:
+        ROLE_PATIENT:      ROLE_USER
+        ROLE_THERAPIST:     ROLE_PATIENT
+        ROLE_MANAGER:       [ROLE_THERAPIST, ROLE_ALLOWED_TO_SWITCH]

@@ -10,12 +10,14 @@ use App\Entity\EmailReport;
 use App\Entity\History;
 use App\Entity\Patient;
 use App\Entity\Therapist;
+use App\Entity\User;
 use App\Form\ChangePasswordType;
 use App\Form\PatientSettingsType;
 use App\Repository\AppointmentRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\HistoryRepository;
 use App\Repository\PatientRepository;
+use App\Repository\UserRepository;
 use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -312,39 +314,34 @@ class PatientController extends AbstractController
     }
 
     /**
-     * @Route(path="/account/delete", name="patient_account_delete")
+     * @Route(path="/account/delete/{id}", name="patient_account_delete")
      */
     public function deleteAccount(
         Request $request,
         EntityManagerInterface $manager,
-        UserPasswordEncoderInterface $encoder,
+        UserRepository $userRepository,
         MailerFactory $mailerFactory
     )
     {
-        $user = $this->getCurrentPatient();
-        if ($user instanceof Patient) {
+        $user = $userRepository->find($request->attributes->get('id'));
+        if ($user instanceof User) {
             $userPassword = $request->request->get('password');
-            if ($encoder->isPasswordValid($user, $userPassword)) {
-                // send email account deletion
-                $mailerFactory->createAndSend(
-                    "Suppression de votre compte",
-                    $user->getEmail(),
-                    $this->renderView('email/user_delete_account.html.twig'),
-                    null,
-                    EmailReport::TYPE_ACCOUNT_DELETION
-                );
-                // delete user
-                $manager->remove($user);
-                $manager->flush();
-                $session = new Session();
-                $session->invalidate();
-                $this->addFlash('success', "Votre compte a été correctement supprimé.");
-                return $this->redirectToRoute('app_logout');
-            } else {
-                $this->addFlash('error', "Votre mot de passe est invalide.");
-                return $this->redirectToRoute('patient_security');
-            }
+            $mailerFactory->createAndSend(
+                "Suppression de votre compte",
+                $user->getEmail(),
+                $this->renderView('email/user_delete_account.html.twig'),
+                null,
+                EmailReport::TYPE_ACCOUNT_DELETION
+            );
+            // delete user
+            $manager->remove($user);
+            $manager->flush();
+            $session = new Session();
+            $session->invalidate();
+            $this->addFlash('success', "Votre compte a été correctement supprimé.");
+            return $this->redirectToRoute('app_logout');
         }
+        $this->addFlash('error', "La suppression de votre compte a échoué.");
         return $this->redirectToRoute('patient_security');
     }
 

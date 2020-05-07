@@ -44,37 +44,9 @@
                 </button>
             {% else %}
                 <!-- Button trigger modal -->
-                <a class="btn btn-danger" href="{{ path('therapist_account_delete') }}">
+                <a class="btn btn-danger" href="{{ path('therapist_account_delete', {'id': app.user.id}) }}">
                     Supprimer mon compte (sans confirmation et irréversible)
                 </a>
-                {#<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
-                    Supprimer mon compte
-                </button>
-
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Supprimer mon compte</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Êtes-vous certain-e de vouloir supprimer votre compte ?</p>
-                                <p>Cette action est irréversible.</p>
-                                <form action="{{ path('therapist_account_delete') }}" method="post">
-                                    <label for="password">Veuillez entrer votre mot de passe</label>
-                                    <input type="password" id="password" name="password" placeholder="Votre mot de passe">
-                                    <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>#}
             {% endif %}
         </div>
     </div>
