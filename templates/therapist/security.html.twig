@@ -1,5 +1,9 @@
 {% extends "account_layout.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
 {% set form = change_password_form %}
 
 {% block heading %}
