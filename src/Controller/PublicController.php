@@ -107,7 +107,7 @@ class PublicController extends AbstractController
             'public/ask_for_help.html.twig',
             [
                 'patient_register_form' => $patientForm->createView(),
-                'https_url' => getenv('project_url')."/demander-de-l-aide"
+                'https_url' => $_ENV['PROJECT_URL']."demander-de-l-aide"
             ]
         );
     }
@@ -270,7 +270,7 @@ class PublicController extends AbstractController
             'public/therapist_register.html.twig',
             [
                 'therapist_register_form' => $therapistForm->createView(),
-                'https_url' => getenv('project_url')."/proposer-mon-aide"
+                'https_url' => $_ENV['PROJECT_URL']."proposer-mon-aide"
             ]
         );
     }
