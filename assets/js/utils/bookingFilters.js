@@ -2,7 +2,9 @@ import moment from "moment";
 import {formatDate, formatDateReverse, getArrayTime} from "./DateUtils";
 
 function filterWithTherapistDelay(a) {
-    const nowDate = moment().format('YYYY-MM-DD');
+    const nowDate = moment().format('DD/MM/YYYY');
+    console.log('nowDate:',nowDate);
+    console.log('format date:',formatDate(a.bookingDate));
     if (nowDate === formatDate(a.bookingDate)) {
         const arrayTime = getArrayTime(a.bookingStart);
         const nowTime = moment();
@@ -15,6 +17,13 @@ function filterWithTherapistDelay(a) {
         return a;
     } else {
         console.log("créneau passé");
+    }
+}
+
+function filterFutureAppointments(appointment) {
+    const nowDate = moment().format('DD/MM/YYYY');
+    if (nowDate < formatDate(appointment.bookingDate)) {
+        return appointment;
     }
 }
 
@@ -78,6 +87,7 @@ function mergeBookings(array1, array2) {
 
 export default {
     filterWithTherapistDelay,
+    filterFutureAppointments,
     filterById,
     setBookingToLocalStorage,
     updateAppointsByFilters,

@@ -67,7 +67,7 @@ function BookingSearch() {
     }
 
     const filterWithTherapistDelay = (appoints) => {
-        return appoints.filter(appoint => bookingFilters.filterWithTherapistDelay(appoint));
+        return appoints.filter(appoint => bookingFilters.filterFutureAppointments(appoint));
     }
 
     const createPatientBooking = (appointId) => {
@@ -87,7 +87,6 @@ function BookingSearch() {
     const getCurrentUser = () => {
         const $targetElement = document.getElementById("booking_search");
         if ($targetElement !== null) {
-            console.log($targetElement.dataset);
             const $targetData =  $targetElement.dataset;
             const userId = $targetData.user;
             const country = $targetData.country;
@@ -97,7 +96,6 @@ function BookingSearch() {
     }
 
     const updateBookingsByApiFilters = async () => {
-        console.log('user:',user);
         const bookings = await bookingApi.updateBookingsByFilters(user);
         if (bookings.length > 0) {
             console.log('bookings:',bookings);
