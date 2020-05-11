@@ -13,10 +13,10 @@
 {% set user = current_user %}
 
 {% block body %}
-    <div id="patient_search" data-user="{{ user.id }}" data-country="{{ user.country }}" data-default-department="{{ user.department.id }}"></div>
+    <div id="booking_search" data-user="{{ user.id }}" data-country="{{ user.country }}" data-default-department="{{ user.department.id }}"></div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('patient_search') }}
+    {{ encore_entry_script_tags('booking_search') }}
 {% endblock %}

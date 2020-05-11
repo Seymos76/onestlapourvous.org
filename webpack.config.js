@@ -31,7 +31,7 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('patient_search', './assets/js/entries/booking_search.jsx')
+    .addEntry('booking_search', './assets/js/entries/booking_search.jsx')
     .addEntry('therapist_availabilities', './assets/js/entries/therapist_availabilities.js')
     .addEntry('manage_members', './assets/js/entries/manage_members.js')
     .addEntry('geolocation', './assets/js/entries/geolocation.jsx')

@@ -8,7 +8,7 @@ import bookingFilters from "../utils/bookingFilters";
 import BookingSearchForm from "../components/BookingSearchForm";
 import geolocationApi from "../services/geolocationApi";
 
-function PatientSearch() {
+function BookingSearch() {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [isConfirmed, setIsConfirmed] = useState(false);
@@ -85,7 +85,7 @@ function PatientSearch() {
     }
 
     const getCurrentUser = () => {
-        const $targetElement = document.getElementById("patient_search");
+        const $targetElement = document.getElementById("booking_search");
         if ($targetElement !== null) {
             console.log($targetElement.dataset);
             const $targetData =  $targetElement.dataset;
@@ -100,6 +100,7 @@ function PatientSearch() {
         const bookings = await bookingApi.updateBookingsByFilters(user);
         if (bookings.length > 0) {
             const appoints = filterWithTherapistDelay(bookings);
+            console.log('appoints:',appoints);
             setAppoints(appoints);
         } else {
             setAppoints([]);
@@ -247,5 +248,5 @@ function PatientSearch() {
     )
 }
 
-const rootElement = document.querySelector("#patient_search");
-ReactDOM.render(<PatientSearch/>, rootElement);
+const rootElement = document.querySelector("#booking_search");
+ReactDOM.render(<BookingSearch/>, rootElement);
