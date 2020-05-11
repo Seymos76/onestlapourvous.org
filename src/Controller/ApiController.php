@@ -65,7 +65,6 @@ class ApiController extends AbstractController
     {
         $country = json_decode($request->getContent(), true);
         $appointmentsByCountry = $appointmentRepository->findAvailableBookingsByFilters($country);
-        dump($appointmentsByCountry);
         $data = $serializer->serialize($appointmentsByCountry, 'json', ['groups' => ['get_bookings']]);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
