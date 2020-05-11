@@ -97,12 +97,14 @@ function BookingSearch() {
     }
 
     const updateBookingsByApiFilters = async () => {
+        console.log('user:',user);
         const bookings = await bookingApi.updateBookingsByFilters(user);
         if (bookings.length > 0) {
+            console.log('bookings:',bookings);
             const appoints = filterWithTherapistDelay(bookings);
-            console.log('appoints:',appoints);
             setAppoints(appoints);
         } else {
+            console.log('bookings:',bookings);
             setAppoints([]);
         }
     }
