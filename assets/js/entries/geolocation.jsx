@@ -6,71 +6,23 @@ import {CITY_FILE} from "../utils/cityFiles";
 import geolocationApi from "../services/geolocationApi";
 
 export function Geolocation() {
+    const [loading, setLoading] = useState(true);
     const [selection, setSelection] = useState({
         country: "fr",
-        department: "",
-        city: "",
-        citySearch: ""
+        department: ""
     });
-
     const [departments, setDepartments] = useState([]);
-    const [cities, setCities] = useState([]);
-    const [filteredCities, setFilteredCities] = useState([]);
 
     const handleChange = ({currentTarget}) => {
         const { name, value } = currentTarget;
-        if (name === 'department') {
-            setSelection({...selection, [name]: value, city: ""})
-        } else {
-            setSelection({...selection, [name]: value});
-        }
-    };
-
-    const handleCitySelect = ({currentTarget}) => {
-        const { value } = currentTarget;
-        const searchingFile = CITY_FILE[selection.country];
-        const filter = getKeyForTown();
-        const city = searchingFile.filter(
-            c => c[filter] === value
-        );
-        setSelection({...selection, city: JSON.stringify(city[0]) })
+        setSelection({...selection, [name]: value});
     };
 
     const getDepartmentsByCountry = async () => {
         const departs = await geolocationApi.getDepartmentsByCountry(selection.country);
         setDepartments([]);
         setDepartments(departs.length > 0 && departs);
-    }
-
-    const getCitiesByDepartment = async () => {
-        const cities = await axios
-            .get(`${API_URL}towns-by-department?department=${selection.department}`)
-            .then(response => {
-                return response.data;
-            });
-        setCities([]);
-        setCities(cities.length > 0 && cities);
-    }
-
-    const getCityFromJson = async () => {
-        setCities([]);
-        setSelection({...selection, city: "", citySearch: ""});
-        const searchingFile = CITY_FILE[selection.country];
-        const filters = getCityFiltersFromCountry();
-        const cities = searchingFile.filter(
-            c => c[filters[0]] === selection.department
-        );
-
-        setCities(cities.length > 0 && cities);
-    }
-
-    const getFilteredCities = () => {
-        setFilteredCities([]);
-        const arrKey = getKeyForTown();
-        const filtered = cities.filter(c =>
-            c[arrKey].toLowerCase().includes(selection.citySearch.toLowerCase())
-        );
-        setFilteredCities(filtered);
+        setLoading(false);
     }
 
     const getKeyForDepartment = () => {
@@ -87,34 +39,6 @@ export function Geolocation() {
         }
     }
 
-    const getKeyForTown = () => {
-        if (selection.country === 'fr') {
-            return "nom";
-        } else if (selection.country === 'be') {
-            return "localite";
-        } else if (selection.country === 'ch') {
-            return "city";
-        }  else if (selection.country === 'lu') {
-            return "COMMUNE";
-        } else {
-            return "nom";
-        }
-    }
-
-    const getCityFiltersFromCountry = () => {
-        if (selection.country === 'fr') {
-            return ["codeDepartement"];
-        } else if (selection.country === 'be') {
-            return ["province"];
-        } else if (selection.country === 'lu') {
-            return ["CANTON"];
-        } else if (selection.country === 'ch') {
-            return ["admin"];
-        } else {
-            return ["codeDepartement"];
-        }
-    }
-
     useEffect(() => {
         (async function updateDepartments() {
             await getDepartmentsByCountry();
@@ -123,6 +47,8 @@ export function Geolocation() {
 
     return (
         <>
+            {loading && <div className={"alert alert-warning"}>Veuillez patienter avant de vous inscrire.</div>}
+            {!loading &&
             <div className="row">
                 <div className="form-group col-md-6">
                     <select onChange={handleChange} name="country" id="country" className={"form-control"}>
@@ -147,7 +73,14 @@ export function Geolocation() {
                     </select>
                 </div>
             </div>
-            {/*
+            }
+        </>
+    )
+}
+
+function CitySearchFields() {
+    return (
+        {/*
             <div className="row">
                 <div className="form-group col-md-6">
                     <label htmlFor="citySearch">Saisissez le nom de votre commune</label>
@@ -173,10 +106,8 @@ export function Geolocation() {
                 }
             </div>
             */}
-        </>
     )
 }
-
 
 const rootElement = document.querySelector("#geolocation");
 ReactDOM.render(<Geolocation/>, rootElement);
