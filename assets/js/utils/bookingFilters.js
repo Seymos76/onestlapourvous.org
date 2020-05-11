@@ -44,6 +44,10 @@ function updateAppointsByFilters(appoints, search) {
         return appoints.filter(function (a) {
             return formatDateReverse(a.bookingDate) === search.bookingDate;
         });
+    } else if (search.department !== undefined) {
+        return appoints.filter(function (a) {
+            return a.therapist?.department?.name.toLowerCase() === search.department.toLowerCase();
+        });
     } else {
         return appoints;
     }

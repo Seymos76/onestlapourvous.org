@@ -141,10 +141,8 @@ function PatientSearch() {
     useEffect(() => {
         if (search.department !== undefined) {
             setLoading(true);
-            (async function bookingSearchWithForm() {
-                await updateBookingsByApiFilters();
-                console.log('form search update');
-            })();
+            updateAppointsByUserFilters();
+            console.log('booking department filtered');
             setLoading(false);
         }
     },[search.department]);

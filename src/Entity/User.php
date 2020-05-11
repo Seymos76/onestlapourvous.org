@@ -76,7 +76,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string")
-     * @Groups({"user_search"})
+     * @Groups({"user_search", "get_bookings"})
      */
     protected $country;
 

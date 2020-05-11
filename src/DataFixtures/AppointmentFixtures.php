@@ -29,7 +29,6 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface, 
 
             $patientId = random_int(1,5);
             /** @var Patient $patient */
-            $patient = $this->getReference(PatientFixtures::PATIENT_USER_REFERENCE."_$patientId");
             $appointment = new Appointment();
             $appointment->setTherapist($therapist);
             $randomDate = $this->getRandomDate();
