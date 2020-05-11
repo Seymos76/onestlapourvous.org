@@ -49,6 +49,10 @@ class AppointmentRepository extends ServiceEntityRepository
             $query
                 ->andWhere('therapist.country = :country')
                 ->setParameter('country', $country);
+        } else {
+            $query
+                ->andWhere('therapist.country = :country')
+                ->setParameter('country', 'fr');
         }
 
         return $query

@@ -60,16 +60,12 @@ class ApiController extends AbstractController
     public function bookingSearchByFilters(
         Request $request,
         SerializerInterface $serializer,
-        AppointmentRepository $appointmentRepository,
-        DepartmentRepository $departmentRepository,
-        PatientRepository $patientRepository
+        AppointmentRepository $appointmentRepository
     )
     {
-        $params = json_decode($request->getContent(), true);
-        $userParams = $params["user"];
-        $user = $patientRepository->find((int)$userParams["id"]);
-        $country = $user->getCountry();
+        $country = json_decode($request->getContent(), true);
         $appointmentsByCountry = $appointmentRepository->findAvailableBookingsByFilters($country);
+        dump($appointmentsByCountry);
         $data = $serializer->serialize($appointmentsByCountry, 'json', ['groups' => ['get_bookings']]);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }
@@ -98,7 +94,8 @@ class ApiController extends AbstractController
     public function getTherapistsByDepartment(
         Request $request,
         DepartmentRepository $departmentRepository,
-        TherapistRepository $therapistRepository, SerializerInterface $serializer
+        TherapistRepository $therapistRepository,
+        SerializerInterface $serializer
     )
     {
         $departmentId = $request->query->get('department');

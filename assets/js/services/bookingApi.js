@@ -33,13 +33,10 @@ async function cancelBooking(id) {
 }
 
 async function updateBookingsByFilters(user) {
-    const params = {
-        user
-    }
     return await axios
         .post(
             `${API_URL}bookings-filtered`,
-            JSON.stringify(params)
+            JSON.stringify(user.country)
         )
         .then(response => {
             return response.data;
