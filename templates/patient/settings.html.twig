@@ -49,18 +49,14 @@
                     </div>
                 </div>
             </div>
-            {% if app.user.country is not null and app.user.department is not null %}
-                Pays enregistré : {{ constant('App\\Entity\\Department::COUNTRIES')[app.user.country] }}
+            {% if app.user.country is not null %}
+            <p>Pays enregistré : {{ constant('App\\Entity\\Department::COUNTRIES')[app.user.country] }}</p>
+            {% endif %}
+            {% if app.user.department is not null %}
+            <p>Département enregistré : {{ app.user.department.name }}</p>
             {% endif %}
 
-            {% if form.department is defined %}
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="department">Département</label>
-                        {{ form_widget(form.department, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                </div>
-            {% endif %}
+            <div id="geolocation"></div>
 
             <button class="btn btn-primary btn-lg btn-block" type="submit">Valider mes modifications</button>
             {{ form_end(form) }}

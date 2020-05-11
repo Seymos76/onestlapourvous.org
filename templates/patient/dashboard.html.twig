@@ -11,6 +11,12 @@
 {% endblock %}
 
 {% block body %}
+    {% if app.user.country is null or app.user.department is null %}
+        <div class="row">
+            <div class="alert alert-danger">Vous n'avez pas renseigné votre localisation.</div>
+            <p>Merci de sélectionner votre pays et votre département dans <a href="{{ path('patient_settings') }}">vos paramètres</a>.</p>
+        </div>
+    {% endif %}
     <div class="row">
         <p class="mt-2">
             Pour votre premier rendez-vous :

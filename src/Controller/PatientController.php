@@ -20,6 +20,7 @@ use App\Repository\PatientRepository;
 use App\Repository\UserRepository;
 use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -246,13 +247,29 @@ class PatientController extends AbstractController
         $prevEmail = $currentUser->getEmail();
         $settingsType = $this->createForm(
             PatientSettingsType::class,
-            $currentUser,
-            ['data' => $currentUser]
+            $currentUser
         );
         $settingsType->handleRequest($request);
         if ($request->isMethod('POST') && $settingsType->isSubmitted() && $settingsType->isValid()) {
+            $selectedCountry = $request->request->get('country');
+            $selectedDepartment = $request->request->get('department');
+
+            $slugger = new Slugify();
+            $departSlug = $slugger->slugify($selectedDepartment);
+            $department = $selectedCountry === 'fr' ?
+                $departmentRepository->findOneBy(['country' => $selectedCountry, 'code' => $selectedDepartment]) :
+                $departmentRepository->findOneBy(['country' => $selectedCountry, 'slug' => $departSlug])
+            ;
             /** @var Patient $user */
             $user = $settingsType->getData();
+            $user->setCountry($selectedCountry ? $selectedCountry : 'fr');
+            if ($department instanceof Department) {
+                $user->setDepartment($department);
+                $user->setScalarDepartment($departSlug);
+            } else {
+                $user->setDepartment(null);
+                $user->setScalarDepartment($departSlug);
+            }
             if ($user->getEmail() !== $prevEmail) {
                 $user->setUniqueEmailToken();
                 $mailerFactory->createAndSend(
