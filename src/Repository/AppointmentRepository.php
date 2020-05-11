@@ -35,7 +35,7 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findAvailableBookingsByFilters(string $country, Department $department = null)
+    public function findAvailableBookingsByFilters(string $country)
     {
         $query = $this->createQueryBuilder('a')
             ->where('a.status = :status')
@@ -45,13 +45,10 @@ class AppointmentRepository extends ServiceEntityRepository
             ->leftJoin('a.therapist', 'therapist')
         ;
 
-        if (null === $department) {
+        if (null !== $country && '' !== $country) {
             $query
                 ->andWhere('therapist.country = :country')
                 ->setParameter('country', $country);
-        } else {
-            $query->andWhere('therapist.department = :department')
-                ->setParameter('department', $department);
         }
 
         return $query

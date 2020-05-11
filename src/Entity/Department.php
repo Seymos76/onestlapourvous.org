@@ -23,7 +23,7 @@ class Department
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"user_search"})
+     * @Groups({"user_search", "get_bookings"})
      */
     private $id;
 

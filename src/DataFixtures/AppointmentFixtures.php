@@ -15,7 +15,6 @@ use Faker\Factory;
 
 class AppointmentFixtures extends Fixture implements DependentFixtureInterface, FixtureGroupInterface
 {
-    public const APPOINT_REFERENCE = "appoint_";
     public function load(ObjectManager $manager)
     {
         if ($_SERVER['APP_ENV'] === 'dev') {
@@ -23,12 +22,9 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface, 
         }
 
         for ($i = 1; $i <= 80; $i++) {
-            $therapistId = random_int(1,4);
+            $therapistId = random_int(1,10);
             /** @var Therapist $therapist */
             $therapist = $this->getReference(TherapistFixtures::THERAPIST_USER_REFERENCE."_$therapistId");
-
-            $patientId = random_int(1,5);
-            /** @var Patient $patient */
             $appointment = new Appointment();
             $appointment->setTherapist($therapist);
             $randomDate = $this->getRandomDate();
@@ -53,7 +49,7 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface, 
 
     private function getRandomDate(): array
     {
-        $day = random_int(25,30);
+        $day = random_int(11,31);
         $hour = random_int(9,20);
         $minute = random_int(0,59);
         if ($day < 10) {
@@ -66,7 +62,7 @@ class AppointmentFixtures extends Fixture implements DependentFixtureInterface, 
             $minute = "0$minute";
         }
         return [
-            'start' => "$day-04-2020 $hour:$minute:00",
+            'start' => "$day-05-2020 $hour:$minute:00",
         ];
     }
 

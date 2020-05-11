@@ -31,7 +31,7 @@ class TherapistFixtures extends Fixture implements DependentFixtureInterface, Fi
             $faker = Factory::create("fr");
         }
 
-        for ($i = 1; $i <= 4; $i ++) {
+        for ($i = 1; $i <= 10; $i++) {
             $therapist = new Therapist();
             if ($i === 1) {
                 $therapist->upgradeToManager();
@@ -47,14 +47,13 @@ class TherapistFixtures extends Fixture implements DependentFixtureInterface, Fi
             $therapist->setIsActive(true);
             $therapist->setFirstName($faker ? $faker->firstName : "Firstname");
             $therapist->setLastName($faker ? $faker->lastName : "Lastname");
-            if ($i%2 > 0) {
-                $therapist->setCountry("fr");
-                /** @var Department $department */
-                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_FR_REFERENCE . "_0" . $i);
+            $therapist->setCountry("fr");
+            /** @var Department $department */
+            $departId = random_int(1, 19);
+            if ($departId < 10) {
+                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_FR_REFERENCE . "_0" . $departId);
             } else {
-                $therapist->setCountry("lu");
-                /** @var Department $department */
-                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_LU_REFERENCE . "_0" . $i);
+                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_FR_REFERENCE . "_" . $departId);
             }
             $therapist->setDepartment($department);
             $therapist->setPhoneNumber($faker ? $faker->phoneNumber : "0600000001");

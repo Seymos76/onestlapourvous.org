@@ -46,7 +46,11 @@ function updateAppointsByFilters(appoints, search) {
         });
     } else if (search.department !== undefined) {
         return appoints.filter(function (a) {
-            return a.therapist?.department?.name.toLowerCase() === search.department.toLowerCase();
+            return parseInt(a.therapist?.department?.id) === parseInt(search.department);
+        });
+    } else if (search.department !== undefined && search.bookingDate !== undefined) {
+        return appoints.filter(function (a) {
+            return parseInt(a.therapist?.department?.id) === parseInt(search.department) && formatDateReverse(a.bookingDate) === search.bookingDate;
         });
     } else {
         return appoints;

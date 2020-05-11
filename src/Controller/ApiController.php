@@ -66,17 +66,10 @@ class ApiController extends AbstractController
     )
     {
         $params = json_decode($request->getContent(), true);
-        $searchParams = $params["search"];
         $userParams = $params["user"];
         $user = $patientRepository->find((int)$userParams["id"]);
         $country = $user->getCountry();
-        if (!array_key_exists("department", $searchParams)) {
-            $department = $departmentRepository->find((int)$userParams["department"]);
-        } else {
-            $department = $departmentRepository->find((int)$searchParams["department"]);
-        }
-
-        $appointmentsByCountry = $appointmentRepository->findAvailableBookingsByFilters($country, null);
+        $appointmentsByCountry = $appointmentRepository->findAvailableBookingsByFilters($country);
         $data = $serializer->serialize($appointmentsByCountry, 'json', ['groups' => ['get_bookings']]);
         return new JsonResponse($data, Response::HTTP_OK, [], true);
     }

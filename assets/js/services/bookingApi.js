@@ -32,9 +32,8 @@ async function cancelBooking(id) {
     });
 }
 
-async function updateBookingsByFilters(search, user) {
+async function updateBookingsByFilters(user) {
     const params = {
-        search,
         user
     }
     return await axios

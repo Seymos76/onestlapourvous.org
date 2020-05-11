@@ -97,7 +97,7 @@ function PatientSearch() {
     }
 
     const updateBookingsByApiFilters = async () => {
-        const bookings = await bookingApi.updateBookingsByFilters(search, user);
+        const bookings = await bookingApi.updateBookingsByFilters(user);
         if (bookings.length > 0) {
             const appoints = filterWithTherapistDelay(bookings);
             setAppoints(appoints);
@@ -198,7 +198,6 @@ function PatientSearch() {
                                             </thead>
                                             <tbody>
                                             {paginatedAppoints.map(a => {
-
                                                 return (
                                                     <tr key={a.id}>
                                                         <BookingRow

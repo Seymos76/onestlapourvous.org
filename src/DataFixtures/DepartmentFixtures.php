@@ -24,7 +24,7 @@ class DepartmentFixtures extends Fixture implements FixtureGroupInterface
     {
         $this->loadFrenchDepartments($manager);
         $this->loadBelgiumDepartments($manager);
-        $this->loadLuxembourgDepartments($manager);
+        //$this->loadLuxembourgDepartments($manager);
         $this->loadSwissDepartments($manager);
 
         // flush

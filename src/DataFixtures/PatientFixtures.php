@@ -37,14 +37,12 @@ class PatientFixtures extends Fixture implements DependentFixtureInterface, Fixt
             $patient->setFirstName($faker ? $faker->firstName : "Firstname");
             $patient->setLastName($faker ? $faker->lastName : "Lastname");
             $patient->setCountry("fr");
-            if ($i%2 > 0) {
-                $patient->setCountry("fr");
+            if ($i < 10) {
                 /** @var Department $department */
                 $department = $this->getReference(DepartmentFixtures::DEPARTMENT_FR_REFERENCE . "_0" . $i);
             } else {
-                $patient->setCountry("lu");
                 /** @var Department $department */
-                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_LU_REFERENCE . "_0" . $i);
+                $department = $this->getReference(DepartmentFixtures::DEPARTMENT_FR_REFERENCE . "_" . $i);
             }
             $patient->setDepartment($department);
             $patient->setPhoneNumber($faker ? $faker->phoneNumber : "0600000000");
