@@ -33,7 +33,7 @@ class PatientFixtures extends Fixture implements DependentFixtureInterface, Fixt
             $patient->setEmail("patient$i@gmail.com");
             $patient->setPassword($this->encoder->encodePassword($patient, "password"));
             $patient->setEmailToken('');
-            $patient->setIsActive(true);
+            $patient->activate();
             $patient->setFirstName($faker ? $faker->firstName : "Firstname");
             $patient->setLastName($faker ? $faker->lastName : "Lastname");
             $patient->setCountry("fr");

@@ -18,18 +18,18 @@ class MailerFactory
         $this->entityManager = $entityManager;
     }
 
-    public function createAndSend(string $subject, string $to, string $body, string $from = null, string $type = null)
+    public function createAndSend(array $emailParams, string $type = null): EmailReport
     {
-        $message = (new \Swift_Message($subject))
-            ->setTo($to)
+        $message = (new \Swift_Message($emailParams['subject']))
+            ->setTo($emailParams['to'])
             //->addCc('company@hapinow.fr')
-            ->setFrom($from ?? 'accueil@enlienavecvous.org')
-            ->setBody($body, 'text/html');
+            ->setFrom($emailParams['from'] ?? 'accueil@enlienavecvous.org')
+            ->setBody($emailParams['body'], 'text/html');
         $success = $this->mailer->send($message);
-        $this->createEmailReport($to, $from ?? 'accueil@enlienavecvous.org', $body, $success, $type);
+        return $this->createEmailReport($emailParams['to'], $emailParams['from'] ?? 'accueil@enlienavecvous.org', $emailParams['body'], $success, $type);
     }
 
-    private function createEmailReport(string $to, string $from, string $body, bool $success, string $type = null)
+    private function createEmailReport(string $to, string $from, string $body, bool $success, string $type = null): EmailReport
     {
         $report = new EmailReport();
         $report->setSender($from)->setRecipient($to)->setMessage($body)->setSentAt(new \DateTime('now'));
@@ -37,5 +37,6 @@ class MailerFactory
         $report->setType($type);
         $this->entityManager->persist($report);
         $this->entityManager->flush();
+        return $report;
     }
 }

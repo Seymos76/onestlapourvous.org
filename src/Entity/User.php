@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\DiscriminatorMap({"user" = "User", "therapist" = "Therapist", "patient" = "Patient"})
  * @UniqueEntity(fields={"email"}, message="Cette adresse est déjà utilisée.")
  */
-class User implements UserInterface
+abstract class User implements UserInterface
 {
     const USER_ROLE = [
         'ROLE_PATIENT' => "Demandeur.se",
@@ -230,10 +230,15 @@ class User implements UserInterface
         return $this->isActive;
     }
 
-    public function setIsActive(bool $isActive): self
+    public function activate(): self
     {
-        $this->isActive = $isActive;
+        $this->isActive = true;
+        return $this;
+    }
 
+    public function deactivate(): self
+    {
+        $this->isActive = false;
         return $this;
     }
 

@@ -5,15 +5,15 @@
     <p>Votre rendez-vous est confirmé :</p>
     <p>Le {{ appointment.bookingDate|date('d/m/Y') }}</p>
     <p>À {{ appointment.bookingStart|date('H:i') }}</p>
-    {% set therapist = appointment.therapist %}
-    {% if therapist.displayName is not null %}
-        <p>Avec {{ therapist.displayName }}</p>
+    {% set user = appointment.therapist %}
+    {% if user.displayName is not null %}
+        <p>Avec {{ user.displayName }}</p>
     {% else %}
         <p>
-            Avec {{ therapist.firstName }} {{ therapist.lastName }}
+            Avec {{ user.firstName }} {{ user.lastName }}
         </p>
     {% endif %}
-    <p>Tel: {{ therapist.phoneNumber|phone_prefix(therapist.country, therapist.phoneNumber) }}, email: {{ therapist.email }}</p>
+    <p>Tel: {{ user.phoneNumber|phone_prefix(user.country, user.phoneNumber) }}, email: {{ user.email }}</p>
 
     <p>Veuillez contacter le/la thérapeute par téléphone au moment du rendez-vous. En fonction de chacun.e, vous aurez la
         possibilité de basculer sur d’autres interfaces tels skype, zoom, etc.</p>

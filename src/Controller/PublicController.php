@@ -4,25 +4,21 @@
 namespace App\Controller;
 
 
-use App\Entity\Department;
 use App\Entity\EmailReport;
 use App\Entity\Patient;
 use App\Entity\Therapist;
-use App\Entity\Town;
 use App\Entity\User;
 use App\Form\ForgotPasswordType;
 use App\Form\PasswordResetType;
 use App\Form\PatientRegisterType;
 use App\Form\TherapistRegisterType;
+use App\Password\ForgotPassword;
+use App\Password\ResetPassword;
+use App\Registration\Registration;
 use App\Repository\DepartmentRepository;
-use App\Repository\PatientRepository;
-use App\Repository\TherapistRepository;
-use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use App\Services\FixturesTrait;
 use App\Services\MailerFactory;
-use App\Services\StatisticTrait;
-use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,10 +47,7 @@ class PublicController extends AbstractController
      */
     public function askForHelpRegister(
         Request $request,
-        UserPasswordEncoderInterface $encoder,
-        MailerFactory $mailerFactory,
-        EntityManagerInterface $entityManager,
-        DepartmentRepository $departmentRepository
+        Registration $registration
     )
     {
         $patient = new Patient();
@@ -62,45 +55,14 @@ class PublicController extends AbstractController
         $patientForm->handleRequest($request);
 
         if ($request->isMethod('POST') && $patientForm->isSubmitted() && $patientForm->isValid()) {
-            $selectedCountry = $request->request->get('country');
-            $selectedDepartment = $request->request->get('department');
-
-            $slugger = new Slugify();
-            $departSlug = $slugger->slugify($selectedDepartment);
-            $department = $selectedCountry === 'fr' ?
-                $departmentRepository->findOneBy(['country' => $selectedCountry, 'code' => $selectedDepartment]) :
-                $departmentRepository->findOneBy(['country' => $selectedCountry, 'slug' => $departSlug])
-            ;
-
-            if ($patientForm->getData() instanceof Patient) {
-                /** @var Patient $user */
-                $user = $patientForm->getData();
-                $user->setCountry($selectedCountry ? $selectedCountry : 'fr');
-                if ($department instanceof Department) {
-                    $user->setDepartment($department);
-                    $user->setScalarDepartment($departSlug);
-                } else {
-                    $user->setDepartment(null);
-                    $user->setScalarDepartment($departSlug);
-                }
-                $user = $user->setUniqueEmailToken();
-                $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
-                $emailToken = $user->getEmailToken();
-                $mailerFactory->createAndSend(
-                    "Validation de votre inscription",
-                    $user->getEmail(),
-                    $this->renderView(
-                        'email/patient_registration.html.twig',
-                        ['email_token' => $emailToken, 'project_url' => $_ENV['PROJECT_URL']]
-                    ),
-                    null,
-                    EmailReport::TYPE_REGISTRATION
-                );
-                $entityManager->persist($user);
-                $entityManager->flush();
-                $this->addFlash("success","Votre compte a été créé avec succès !");
-                return $this->redirectToRoute('registration_waiting_for_email_validation', [], Response::HTTP_CREATED);
+            if (!$patientForm->getData() instanceof Patient) {
+                throw new \Exception("Les données envoyées ne correspondent pas à ce qui est attendu.");
             }
+            $localisation = $registration->getDepartment($request);
+            $user = $registration->registerUser($patientForm->getData(), $localisation);
+            $registration->sendRegistrationEmail($user, Patient::class);
+            $this->addFlash("success","Votre compte a été créé avec succès !");
+            return $this->redirectToRoute('registration_waiting_for_email_validation', [], Response::HTTP_CREATED);
         }
 
         return $this->render(
@@ -113,14 +75,49 @@ class PublicController extends AbstractController
     }
 
     /**
+     * @Route(path="/proposer-mon-aide", name="therapist_register")
+     */
+    public function therapistRegister(
+        Request $request,
+        UserPasswordEncoderInterface $encoder,
+        MailerFactory $mailerFactory,
+        EntityManagerInterface $entityManager,
+        DepartmentRepository $departmentRepository,
+        Registration $registration
+    )
+    {
+        $therapist = new Therapist();
+        $therapistForm = $this->createForm(TherapistRegisterType::class, $therapist);
+        $therapistForm->handleRequest($request);
+
+        if ($request->isMethod('POST') && $therapistForm->isSubmitted() && $therapistForm->isValid()) {
+            if (!$therapistForm->getData() instanceof Therapist) {
+                throw new \Exception("Les données envoyées ne correspondent pas à ce qui est attendu.");
+            }
+            $localisation = $registration->getDepartment($request);
+            $user = $registration->registerUser($therapistForm->getData(), $localisation);
+            $registration->sendRegistrationEmail($user, Therapist::class);
+            $this->addFlash("success","Votre compte a été créé avec succès !");
+            return $this->redirectToRoute('registration_waiting_for_email_validation', [], Response::HTTP_CREATED);
+        }
+
+        return $this->render(
+            'public/therapist_register.html.twig',
+            [
+                'therapist_register_form' => $therapistForm->createView(),
+                'https_url' => $_ENV['PROJECT_URL']."proposer-mon-aide"
+            ]
+        );
+    }
+
+    /**
      * @Route(path="/mot-de-passe/oublie", name="forgot_password")
      * @param Request $request
      * @param UserRepository $repository
      */
     public function forgotPassword(
         Request $request,
-        UserRepository $repository,
-        MailerFactory $mailerFactory, EntityManagerInterface $manager
+        ForgotPassword $forgotPassword
     )
     {
         $form = $this->createForm(ForgotPasswordType::class);
@@ -128,29 +125,13 @@ class PublicController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $form->getData()['email'];
-            $user = $repository->findOneBy(['email' => $email]);
-            if ($user instanceof User) {
-                $user->setPasswordResetToken(uniqid('pwd_reset_', true));
-                $manager->flush();
-                $mailerFactory->createAndSend(
-                    "Réinitialisation de votre mot de passe",
-                    $user->getEmail(),
-                    $this->renderView(
-                        'email/user_reset_email.html.twig',
-                        [
-                            'project_url' => $_ENV['PROJECT_URL'],
-                            'token' => $user->getPasswordResetToken()
-                        ]
-                    ),
-                    null,
-                    EmailReport::TYPE_PASSWORD_RESET_REQUEST
-                );
-                $this->addFlash('success', "Un email vous a été envoyé, pensez à vérifier vos spams.");
-                return $this->redirectToRoute('forgot_password');
-            } else {
-                $this->addFlash('error', "Nous n'avons pas trouvé votre adresse email.");
-                return $this->redirectToRoute('forgot_password');
+            try {
+                $response = $forgotPassword->resetPasswordFor($email);
+            } catch (\Exception $exception) {
+                echo "Un problème lors de la réinitialisation du mot de passe: ".$exception->getMessage();
             }
+            $this->addFlash($response['message']['type'], $response['message']['message']);
+            return $this->redirectToRoute($response['route']);
         }
         return $this->render(
             'security/forgot_password.html.twig',
@@ -173,7 +154,8 @@ class PublicController extends AbstractController
         UserRepository $userRepository,
         MailerFactory $mailerFactory,
         EntityManagerInterface $manager,
-        UserPasswordEncoderInterface $encoder
+        UserPasswordEncoderInterface $encoder,
+        ResetPassword $resetPassword
     )
     {
         $token = $request->query->get('token');
@@ -185,20 +167,18 @@ class PublicController extends AbstractController
         $form = $this->createForm(PasswordResetType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $pass = $form->getData()['password'];
-            $encoded = $encoder->encodePassword($user, $pass);
-            $user->setPassword($encoded);
-            $user->setPasswordResetToken(null);
+            $resetPassword->reset($user, $form->getData()['password']);
             $mailerFactory->createAndSend(
-                "Mot de passe réinitialisé",
-                $user->getEmail(),
-                $this->renderView(
-                    'email/user_reset_password_success.html.twig'
-                ),
-                null,
+                [
+                    "Mot de passe réinitialisé",
+                    $user->getEmail(),
+                    $this->renderView(
+                        'email/user_reset_password_success.html.twig'
+                    ),
+                    null
+                ],
                 EmailReport::TYPE_PASSWORD_RESET_SUCCESS
             );
-            $manager->flush();
             $this->addFlash('success', "Vous pouvez désormais vous connecter avec votre nouveau mot de passe.");;
             return $this->redirectToRoute('app_login');
         }
@@ -211,89 +191,21 @@ class PublicController extends AbstractController
     }
 
     /**
-     * @Route(path="/proposer-mon-aide", name="therapist_register")
+     * @Route(path="/email/confirmation/{emailToken}")
      */
-    public function therapistRegister(
-        Request $request,
-        UserPasswordEncoderInterface $encoder,
-        MailerFactory $mailer,
-        EntityManagerInterface $entityManager,
-        DepartmentRepository $departmentRepository
+    public function registrationConfirmationCheck(
+        RequestContext $requestContext,
+        Registration $registration
     )
     {
-        $therapist = new Therapist();
-        $therapistForm = $this->createForm(TherapistRegisterType::class, $therapist);
-        $therapistForm->handleRequest($request);
-
-        if ($request->isMethod('POST') && $therapistForm->isSubmitted() && $therapistForm->isValid()) {
-            $selectedCountry = $request->request->get('country');
-            $selectedDepartment = $request->request->get('department');
-
-            $slugger = new Slugify();
-            $departSlug = $slugger->slugify($selectedDepartment);
-            $department = $selectedCountry === 'fr' ?
-                $departmentRepository->findOneBy(['country' => $selectedCountry, 'code' => $selectedDepartment]) :
-                $departmentRepository->findOneBy(['country' => $selectedCountry, 'slug' => $departSlug])
-            ;
-            if ($therapistForm->getData() instanceof Therapist) {
-                /** @var Therapist $user */
-                $user = $therapistForm->getData();
-                $user->setCountry($selectedCountry ? $selectedCountry : 'fr');
-                if ($department instanceof Department) {
-                    $user->setDepartment($department);
-                    $user->setScalarDepartment($departSlug);
-                } else {
-                    $user->setDepartment(null);
-                    $user->setScalarDepartment($departSlug);
-                }
-                $user = $user->setUniqueEmailToken();
-                $user = $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
-                $emailToken = $user->getEmailToken();
-                $mailer->createAndSend(
-                    "Validation de votre inscription",
-                    $user->getEmail(),
-                    $this->renderView(
-                        'email/therapist_registration.html.twig',
-                        ['email_token' => $emailToken, 'project_url' => $_ENV['PROJECT_URL']]
-                    ),
-                    null,
-                    EmailReport::TYPE_REGISTRATION
-                );
-                $entityManager->persist($user);
-                $entityManager->flush();
-                $this->addFlash("success","Votre compte a été créé avec succès !");
-                return $this->redirectToRoute('registration_waiting_for_email_validation', [], Response::HTTP_CREATED);
-            }
+        $token = Registration::getToken($requestContext);
+        try {
+            $arr = $registration->activateUserOrNot($token);
+        } catch (\Exception $exception) {
+            echo "Erreur lors de l'activation d'une adresse email nouvellement inscrite: ".$exception->getMessage();
         }
-
-        return $this->render(
-            'public/therapist_register.html.twig',
-            [
-                'therapist_register_form' => $therapistForm->createView(),
-                'https_url' => $_ENV['PROJECT_URL']."proposer-mon-aide"
-            ]
-        );
-    }
-
-    /**
-     * @Route(path="/email/confirmation/{emailToken}")
-     * @param Request $request
-     */
-    public function registrationConfirmationCheck(Request $request, RequestContext $requestContext, UserRepository $userRepository, TherapistRepository $therapistRepository, EntityManagerInterface $entityManager)
-    {
-        $token = substr($requestContext->getPathInfo(), 20, strlen($requestContext->getPathInfo()));
-        $user = $userRepository->findOneBy(['emailToken' => $token]);
-        if ($user && false === $user->isActive()) {
-            $user->setEmailToken('')->setIsActive(true);
-            $entityManager->flush();
-            return $this->redirectToRoute('app_login');
-        } else if ($user && true === $user->isActive()) {
-            $this->addFlash('error', "Votre nouvelle adresse email vient d'être confirmée.");
-            return $this->redirectToRoute('app_login');
-        } else {
-            $this->addFlash('error', "Votre code de confirmation n'est pas valide, veuillez contacter le support de la plateforme ou créer votre compte.");
-            return $this->redirectToRoute('therapist_register');
-        }
+        $this->addFlash($arr['message']['type'], $arr['message']['message']);
+        return $this->redirectToRoute($arr['route']);
     }
 
     /**
@@ -394,36 +306,5 @@ class PublicController extends AbstractController
     public function comingSoon()
     {
         return $this->render('public/coming_soon.html.twig');
-    }
-
-    private function getOrCreateCity(
-        string $selectedCountry,
-        TownRepository $townRepository,
-        Department $department,
-        array $city
-    ): Town
-    {
-        if ($selectedCountry === 'fr') {
-            $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["nom"]]);
-        } elseif ($selectedCountry === 'be') {
-            $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["localite"]]);
-        } elseif ($selectedCountry === 'lu') {
-            $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["COMMUNE"]]);
-        } elseif ($selectedCountry === 'ch') {
-            $existingTown = $townRepository->findOneBy(['department' => $department, 'name' => $city["city"]]);
-        }
-
-        if (!$existingTown instanceof Town) {
-            if ($selectedCountry === 'fr') {
-                $town = $this->createFrCity($city);
-            } elseif ($selectedCountry === 'be') {
-                $town = $this->createBeCity($city);
-            } elseif ($selectedCountry === 'lu') {
-                $town = $this->createLuCity($city);
-            } elseif ($selectedCountry === 'ch') {
-                $town = $this->createChCity($city);
-            }
-        }
-        return $existingTown ?? $town;
     }
 }

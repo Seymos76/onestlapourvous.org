@@ -4,6 +4,8 @@
 namespace App\Controller;
 
 
+use App\Appointment\AppointmentAccessor;
+use App\Appointment\AppointmentManager;
 use App\Entity\Appointment;
 use App\Entity\Department;
 use App\Entity\EmailReport;
@@ -20,8 +22,11 @@ use App\Repository\DepartmentRepository;
 use App\Repository\HistoryRepository;
 use App\Repository\TherapistRepository;
 use App\Repository\UserRepository;
-use App\Services\HistoryHelper;
+use App\History\HistoryHelper;
+use App\Search\RequestParameters;
 use App\Services\MailerFactory;
+use App\User\UserMalus;
+use App\User\UserManager;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -86,38 +91,28 @@ class TherapistController extends AbstractController
      * @Route(path="/booking/{id}", name="therapist_booking_status")
      * @ParamConverter(name="id", class="App\Entity\Appointment")
      */
-    public function bookingStatus(
+    public function changeBookingStatus(
         Appointment $appointment,
         Request $request,
         EntityManagerInterface $entityManager,
         HistoryHelper $historyHelper,
-        MailerFactory $mailerFactory
+        MailerFactory $mailerFactory,
+        UserMalus $userMalus
     )
     {
         $status = $request->query->get('status');
         $patient = $appointment->getPatient();
-        if ($status === Appointment::STATUS_DISHONORED) {
-            if (null === $patient->getMalus()) {
-                $malus = 1;
-                $patient->setMalus($malus);
-            } else {
-                $malus = $patient->getMalus() + 1;
-                $patient->setMalus($malus);
-            }
-            $historyHelper->addHistoryItem(History::ACTION_DISHONORED, $appointment);
-        } else {
-            $historyHelper->addHistoryItem(History::ACTION_HONORED, $appointment);
-        }
+        $userMalus->manageByStatus($appointment, $patient, $status);
+        // make event
         if ($patient->getMalus() >= 3) {
-            $mailerFactory->createAndSend(
+            $mailerFactory->createAndSend([
                 "3 rdv non honorés...",
                 $appointment->getTherapist()->getEmail(),
                 $this->renderView('email/patient_malus.html.twig', ['patient' => $patient]),
-                null,
+                null],
                 EmailReport::TYPE_ALERT_DISHONORED
             );
         }
-        $appointment->setStatus($status);
         $entityManager->flush();
         $this->addFlash('success', "Statut de la réservation mis à jour, disponible dans l'historique !");
         return $this->redirectToRoute('therapist_bookings');
@@ -134,7 +129,8 @@ class TherapistController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         MailerFactory $mailer,
-        HistoryHelper $historyHelper
+        AppointmentManager $appointmentManager,
+        UserManager $userManager
     )
     {
         $currentUser = $this->getCurrentTherapist();
@@ -155,13 +151,10 @@ class TherapistController extends AbstractController
         $form->handleRequest($request);
 
         if ($request->isMethod("POST") && $form->isSubmitted() && $form->isValid()) {
-            $appointment->setBooked(false);
             $patientEmail = $appointment->getPatient()->getEmail();
-            $appointment->setStatus(Appointment::STATUS_CANCELLED);
-            $appointment->setPatient(null);
-            $appointment->setStatus(Appointment::STATUS_TO_DELETE);
+            $appointmentManager->cancel($appointment);
             $mailer->createAndSend(
-                "Annulation du rendez-vous",
+                ["Annulation du rendez-vous",
                 $patientEmail,
                 $this->renderView(
                     'email/appointment_cancelled_from_therapist.html.twig',
@@ -172,11 +165,10 @@ class TherapistController extends AbstractController
                             : $this->getParameter('project_url')
                     ]
                 ),
-                null,
+                null],
                 EmailReport::TYPE_BOOKING_CANCELLATION_BY_THERAPIST
             );
-            $currentUser->removeAppointment($appointment);
-            $entityManager->remove($appointment);
+            $userManager->clearAppointment($currentUser, $appointment);
             $entityManager->flush();
             $this->addFlash('info', "Rendez-vous annulé, créneau supprimé et message envoyé.");
             return $this->redirectToRoute('therapist_bookings');
@@ -195,7 +187,8 @@ class TherapistController extends AbstractController
      * @return Response
      */
     public function availabilities(
-        AppointmentRepository $appointmentRepository,
+        AppointmentAccessor $appointmentAccessor,
+        RequestParameters $requestParameters,
         Request $request,
         EntityManagerInterface $manager,
         PaginatorInterface $paginator
@@ -213,18 +206,9 @@ class TherapistController extends AbstractController
             return $this->redirectToRoute('therapist_availabilities');
         }
 
-        $params = [];
-        foreach ($request->query as $key => $value) {
-            if ($value !== "") {
-                $params[$key] = $value;
-            }
-        }
+        $params = $requestParameters->getParameters($request);
 
-        if (count($params) === 0) {
-            $appointments = $appointmentRepository->findAvailableBookingsByParams($params, $currentUser);
-        } else {
-            $appointments = $appointmentRepository->findAvailableBookingsByParams($params, $currentUser);
-        }
+        $appointments = $appointmentAccessor->getByParameters($params, $currentUser);
 
         $paginated = $paginator->paginate(
             $appointments,
@@ -280,12 +264,12 @@ class TherapistController extends AbstractController
      */
     public function availabilitiesDelete(
         Request $request,
-        AppointmentRepository $appointmentRepository,
+        AppointmentAccessor $appointmentAccessor,
         EntityManagerInterface $manager
     ): RedirectResponse
     {
         $appointId = $request->attributes->get('id');
-        $appointment = $appointmentRepository->find((int)$appointId);
+        $appointment = $appointmentAccessor->getById((int)$appointId);
         if (!$appointment || !$appointment instanceof Appointment) {
             $this->addFlash('error', "Créneau introuvable...");
             return $this->redirectToRoute('therapist_availabilities');
@@ -293,12 +277,11 @@ class TherapistController extends AbstractController
         if ($appointment->getPatient() instanceof Patient) {
             $this->addFlash('error',"Ce créneau a été réservé... veuillez l'annuler avant de le supprimer.");
             return $this->redirectToRoute('therapist_availabilities');
-        } else {
-            $manager->remove($appointment);
-            $manager->flush();
-            $this->addFlash('success',"Créneau supprimé avec succès !");
-            return $this->redirectToRoute('therapist_availabilities');
         }
+        $manager->remove($appointment);
+        $manager->flush();
+        $this->addFlash('success',"Créneau supprimé avec succès !");
+        return $this->redirectToRoute('therapist_availabilities');
     }
 
     /**

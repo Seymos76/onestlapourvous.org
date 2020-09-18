@@ -16,7 +16,7 @@ use App\Repository\TherapistRepository;
 use App\Repository\TownRepository;
 use App\Repository\UserRepository;
 use App\Services\CustomSerializer;
-use App\Services\HistoryHelper;
+use App\History\HistoryHelper;
 use App\Services\MailerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;

@@ -91,6 +91,12 @@ class Patient extends User
         return $this;
     }
 
+    public function addMalus(): self
+    {
+        $this->malus++;
+        return $this;
+    }
+
     public function getMalus(): ?int
     {
         return $this->malus;

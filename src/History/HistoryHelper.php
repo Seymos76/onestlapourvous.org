@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Services;
+namespace App\History;
 
 
 use App\Entity\Appointment;

@@ -4,8 +4,11 @@
 namespace App\Controller;
 
 
+use App\Appointment\AppointmentAccessor;
+use App\Appointment\AppointmentCanceller;
+use App\Appointment\AppointmentConfirmation;
+use App\Appointment\AppointmentManager;
 use App\Entity\Appointment;
-use App\Entity\Department;
 use App\Entity\EmailReport;
 use App\Entity\History;
 use App\Entity\Patient;
@@ -13,23 +16,24 @@ use App\Entity\Therapist;
 use App\Entity\User;
 use App\Form\ChangePasswordType;
 use App\Form\PatientSettingsType;
+use App\History\HistoryHelper;
+use App\Localisation\UserLocalisation;
+use App\Password\ChangePassword;
+use App\Registration\Registration;
 use App\Repository\AppointmentRepository;
-use App\Repository\DepartmentRepository;
 use App\Repository\HistoryRepository;
 use App\Repository\PatientRepository;
-use App\Repository\UserRepository;
-use App\Services\HistoryHelper;
 use App\Services\MailerFactory;
-use Cocur\Slugify\Slugify;
+use App\User\UserAccessor;
+use App\User\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class PatientController
@@ -38,6 +42,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class PatientController extends AbstractController
 {
+    const USER_ROLE = Patient::class;
+
     private $patientRepository;
 
     public function __construct(PatientRepository $patientRepository)
@@ -60,15 +66,14 @@ class PatientController extends AbstractController
      * @Route(path="/rendez-vous", name="patient_appointments")
      * @return Response
      */
-    public function appointments(AppointmentRepository $appointmentRepository)
+    public function appointments(
+        UserManager $userManager,
+        AppointmentAccessor $appointmentAccessor
+    )
     {
-        $currentPatient = $this->getCurrentPatient();
-        $appointsAndHistory = $appointmentRepository->findBy(
-            ['patient' => $currentPatient, 'status' => Appointment::STATUS_BOOKED]
-        );
-        $appoints = array_filter($appointsAndHistory, function ($a, $k) {
-            return !$a instanceof History;
-        }, ARRAY_FILTER_USE_BOTH);
+        $currentPatient = $userManager->getCurrentUser($this->getUser()->getUsername(), self::USER_ROLE);
+        $appointsAndHistory = $appointmentAccessor->getBookingsByPatient($currentPatient);
+        $appoints = $appointmentAccessor->filterAppointments($appointsAndHistory);
         return $this->render(
             'patient/appointments.html.twig',
             [
@@ -86,42 +91,45 @@ class PatientController extends AbstractController
         Appointment $appointment,
         EntityManagerInterface $entityManager,
         MailerFactory $mailerFactory,
-        HistoryHelper $historyHelper
+        HistoryHelper $historyHelper,
+        AppointmentCanceller $canceller
     )
     {
-        if ($appointment instanceof Appointment && $appointment->getStatus() === Appointment::STATUS_BOOKED) {
-            $appointment->setBooked(false);
-            $appointment->setCancelled(true);
-            // add booking cancel history
-            $historyHelper->addHistoryItem(History::ACTION_CANCELLED_BY_PATIENT, $appointment);
-            $mailerFactory->createAndSend(
-                "Annulation du rendez-vous",
-                $appointment->getTherapist()->getEmail(),
-                $this->renderView('email/appointment_cancelled_from_patient.html.twig', ['appointment' => $appointment]),
-                null,
-                EmailReport::TYPE_BOOKING_CANCELLATION_BY_PATIENT
-            );
-            $appointment->setPatient(null);
-            $appointment->setStatus(Appointment::STATUS_AVAILABLE);
-            $entityManager->flush();
-            $this->addFlash('info', "Rendez-vous annulé. Vous allez recevoir un mail de confirmation de l'annulation.");
-            return $this->redirectToRoute('patient_appointments');
-        } else {
+        if(!$appointment instanceof Appointment) {
             $this->addFlash('error', "Erreur lors de l'annulation.");
             return $this->redirectToRoute('patient_appointments');
         }
+        if (Appointment::STATUS_BOOKED !== $appointment->getStatus()) {
+            $this->addFlash('error', "Erreur lors de l'annulation.");
+            return $this->redirectToRoute('patient_appointments');
+        }
+        $canceller->cancel($appointment);
+        // add booking cancel history
+        $historyHelper->addHistoryItem(History::ACTION_CANCELLED_BY_PATIENT, $appointment);
+        $mailerFactory->createAndSend(
+            [
+                "Annulation du rendez-vous",
+                $appointment->getTherapist()->getEmail(),
+                $this->renderView('email/appointment_cancelled_from_patient.html.twig', ['appointment' => $appointment]),
+                null
+            ],
+            EmailReport::TYPE_BOOKING_CANCELLATION_BY_PATIENT
+        );
+        $entityManager->flush();
+        $this->addFlash('info', "Rendez-vous annulé. Vous allez recevoir un mail de confirmation de l'annulation.");
+        return $this->redirectToRoute('patient_appointments');
     }
 
     /**
      * @Route(path="/recherche", name="patient_research")
      * @return Response
      */
-    public function research()
+    public function research(UserManager $userManager)
     {
         return $this->render(
             'patient/research.html.twig',
             [
-                'current_user' => $this->getCurrentPatient()
+                'current_user' => $userManager->getCurrentUser($this->getUser()->getUsername(), Patient::class)
             ]
         );
     }
@@ -135,30 +143,30 @@ class PatientController extends AbstractController
         Therapist $therapist,
         AppointmentRepository $appointmentRepository,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        UserAccessor $userAccessor,
+        AppointmentAccessor $appointmentAccessor,
+        AppointmentManager $appointmentManager
     )
     {
-        $patient = $this->getCurrentPatient();
-        $patientId = $patient->getId();
+        $currentUser = $this->getUser();
+        $patient = $userAccessor->getPatientByEmail($currentUser->getUsername());
         $appoints = $appointmentRepository->getAppointmentsByTherapist($therapist);
 
         if ($request->isMethod("POST")) {
-            $appoint = $appointmentRepository->find($request->request->get('booking_id'));
-            if ($appoint instanceof Appointment) {
-                $appoint->setPatient($patient);
-                $appoint->setStatus(Appointment::STATUS_BOOKING);
-                $entityManager->flush();
-                return $this->redirectToRoute('patient_confirm_booking', ['id' => $appoint->getId()]);
-            } else {
-                $this->addFlash('error', "Un problème est survenu");
-                return $this->redirectToRoute('patient_research_by_therapist', ['id' => $therapist->getId()]);
+            $appointment = $appointmentAccessor->getById($request->request->get('booking_id'));
+            if (!$appointment instanceof Appointment) {
+                throw new \Exception("Ce créneau n'est pas valide.");
             }
+            $appointmentManager->book($appointment, $patient);
+            $entityManager->flush();
+            return $this->redirectToRoute('patient_confirm_booking', ['id' => $appoint->getId()]);
         }
         return $this->render(
             'patient/research_by_therapist.html.twig',
             [
                 'appoints' => $appoints,
-                'patient_id' => $patientId
+                'patient_id' => $patient->getId()
             ]
         );
     }
@@ -174,30 +182,30 @@ class PatientController extends AbstractController
         HistoryHelper $historyHelper,
         EntityManagerInterface $entityManager,
         MailerFactory $mailerFactory,
-        AppointmentRepository $appointmentRepository
+        AppointmentAccessor $accessor,
+        AppointmentConfirmation $appointmentConfirmation
     )
     {
         if ($request->isMethod("POST")) {
-            $appointment = $appointmentRepository->find($request->request->get('booking_id'));
-            $appointment->setBooked(true);
-            $appointment->setStatus(Appointment::STATUS_BOOKED);
+            $appointment = $accessor->getById($request->request->get('booking_id'));
+            $appointmentConfirmation->confirm($appointment);
             $historyHelper->addHistoryItem(History::ACTION_BOOKED, $appointment);
 
-            $mailerFactory->createAndSend(
+            $mailerFactory->createAndSend([
                 "Confirmation de rendez-vous",
                 $appointment->getPatient()->getEmail(),
-                $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment]),
-                null,
+                $this->renderView('email/appointment_booked_patient.html.twig', ['appointment' => $appointment,]),
+                null],
                 EmailReport::TYPE_BOOKING_CONFIRMATION
             );
-
-            $mailerFactory->createAndSend(
+            $mailerFactory->createAndSend([
                 "Confirmation de rendez-vous",
                 $appointment->getTherapist()->getEmail(),
                 $this->renderView('email/appointment_booked_therapist.html.twig', ['appointment' => $appointment]),
-                null,
+                null],
                 EmailReport::TYPE_BOOKING_CONFIRMATION
             );
+
             $entityManager->flush();
             $this->addFlash('success', "Votre rendez-vous est confirmé, un mail de confirmation vous a été envoyé !");
             return $this->redirectToRoute('patient_appointments');
@@ -214,10 +222,16 @@ class PatientController extends AbstractController
      * @Route(path="/historique", name="patient_history")
      * @return Response
      */
-    public function history(HistoryRepository $historyRepository, Request $request, PaginatorInterface $paginator)
+    public function history(
+        HistoryRepository $historyRepository,
+        Request $request,
+        PaginatorInterface $paginator,
+        UserAccessor $userAccessor
+    )
     {
-        $currentUser = $this->getCurrentPatient();
-        $history = $historyRepository->findByPatient($currentUser);
+        $currentUser = $this->getUser();
+        $patient = $userAccessor->getPatientByEmail($currentUser->getUsername());
+        $history = $historyRepository->findByPatient($patient);
 
         $paginated = $paginator->paginate(
             $history,
@@ -239,11 +253,13 @@ class PatientController extends AbstractController
     public function settings(
         Request $request,
         EntityManagerInterface $manager,
-        DepartmentRepository $departmentRepository,
-        MailerFactory $mailerFactory
+        MailerFactory $mailerFactory,
+        Registration $registration,
+        UserLocalisation $userLocalisation
     )
     {
-        $currentUser = $this->getCurrentPatient();
+        /** @var UserInterface $currentUser */
+        $currentUser = $this->getUser();
         $prevEmail = $currentUser->getEmail();
         $settingsType = $this->createForm(
             PatientSettingsType::class,
@@ -251,35 +267,22 @@ class PatientController extends AbstractController
         );
         $settingsType->handleRequest($request);
         if ($request->isMethod('POST') && $settingsType->isSubmitted() && $settingsType->isValid()) {
-            $selectedCountry = $request->request->get('country');
-            $selectedDepartment = $request->request->get('department');
-
-            $slugger = new Slugify();
-            $departSlug = $slugger->slugify($selectedDepartment);
-            $department = $selectedCountry === 'fr' ?
-                $departmentRepository->findOneBy(['country' => $selectedCountry, 'code' => $selectedDepartment]) :
-                $departmentRepository->findOneBy(['country' => $selectedCountry, 'slug' => $departSlug])
-            ;
+            $localisation = $registration->getDepartment($request);
             /** @var Patient $user */
             $user = $settingsType->getData();
-            $user->setCountry($selectedCountry ? $selectedCountry : 'fr');
-            if ($department instanceof Department) {
-                $user->setDepartment($department);
-                $user->setScalarDepartment($departSlug);
-            } else {
-                $user->setDepartment(null);
-                $user->setScalarDepartment($departSlug);
-            }
+
+            $userLocalisation->relocalizeUser($user, $localisation);
+
             if ($user->getEmail() !== $prevEmail) {
                 $user->setUniqueEmailToken();
                 $mailerFactory->createAndSend(
-                    "Changement de votre adresse email",
+                    ["Changement de votre adresse email",
                     $user->getEmail(),
                     $this->renderView(
                         'email/user_change_email.html.twig',
                         ['email_token' => $user->getEmailToken(), 'project_url' => $_ENV['PROJECT_URL']]
                     ),
-                    null,
+                    null],
                     EmailReport::TYPE_CHANGE_EMAIL_ADDR
                 );
                 $manager->flush();
@@ -304,19 +307,17 @@ class PatientController extends AbstractController
      */
     public function security(
         Request $request,
-        UserPasswordEncoderInterface $encoder,
         EntityManagerInterface $manager,
-        AppointmentRepository $appointmentRepository
+        AppointmentRepository $appointmentRepository,
+        ChangePassword $changePassword
     )
     {
-        $user = $this->getCurrentPatient();
+        $user = $this->getUser();
         $changePasswordForm = $this->createForm(ChangePasswordType::class, $user);
         $changePasswordForm->handleRequest($request);
         $appointments = $appointmentRepository->findBy(['patient' => $user, 'status' => Appointment::STATUS_BOOKED]);
         if ($request->isMethod('POST') && $changePasswordForm->isSubmitted() && $changePasswordForm->isValid()) {
-            $newPassword = $changePasswordForm->getData()->getPassword();
-            $encoded = $encoder->encodePassword($user, $newPassword);
-            $user->setPassword($encoded);
+            $changePassword->change($user, $changePasswordForm->getData()->getPassword());
             $manager->flush();
             $this->addFlash('success',"Votre mot de passe a été mis à jour !");
             return $this->redirectToRoute('patient_security');
@@ -335,35 +336,26 @@ class PatientController extends AbstractController
      */
     public function deleteAccount(
         Request $request,
-        EntityManagerInterface $manager,
-        UserRepository $userRepository,
+        UserAccessor $userAccessor,
+        UserManager $userManager,
         MailerFactory $mailerFactory
     )
     {
-        $user = $userRepository->find($request->attributes->get('id'));
-        if ($user instanceof User) {
-            $userPassword = $request->request->get('password');
-            $mailerFactory->createAndSend(
-                "Suppression de votre compte",
+        $user = $userAccessor->getUserById($request->attributes->get('id'));
+        if (!$user instanceof User) {
+            $this->addFlash('error', "La suppression de votre compte a échoué.");
+            return $this->redirectToRoute('patient_security');
+        }
+        $mailerFactory->createAndSend(
+            ["Suppression de votre compte",
                 $user->getEmail(),
                 $this->renderView('email/user_delete_account.html.twig'),
-                null,
-                EmailReport::TYPE_ACCOUNT_DELETION
-            );
-            // delete user
-            $manager->remove($user);
-            $manager->flush();
-            $session = new Session();
-            $session->invalidate();
-            $this->addFlash('success', "Votre compte a été correctement supprimé.");
-            return $this->redirectToRoute('app_logout');
-        }
-        $this->addFlash('error', "La suppression de votre compte a échoué.");
-        return $this->redirectToRoute('patient_security');
-    }
-
-    private function getCurrentPatient(): Patient
-    {
-        return $this->patientRepository->findOneBy(['email' => $this->getUser()->getUsername()]);
+                null],
+            EmailReport::TYPE_ACCOUNT_DELETION
+        );
+        // delete user
+        $userManager->deleteAccount($user);
+        $this->addFlash('success', "Votre compte a été correctement supprimé.");
+        return $this->redirectToRoute('app_logout');
     }
 }

@@ -44,7 +44,7 @@ class TherapistFixtures extends Fixture implements DependentFixtureInterface, Fi
             $therapist->setEmail("therapist$i@gmail.com");
             $therapist->setPassword($this->encoder->encodePassword($therapist, "password"));
             $therapist->setEmailToken('');
-            $therapist->setIsActive(true);
+            $therapist->activate();
             $therapist->setFirstName($faker ? $faker->firstName : "Firstname");
             $therapist->setLastName($faker ? $faker->lastName : "Lastname");
             $therapist->setCountry("fr");

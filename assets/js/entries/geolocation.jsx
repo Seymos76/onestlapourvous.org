@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import axios from "axios";
-import {API_URL} from "../config";
-import {CITY_FILE} from "../utils/cityFiles";
 import geolocationApi from "../services/geolocationApi";
 
 export function Geolocation() {
