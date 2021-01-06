@@ -27,7 +27,7 @@
     "dependencies": {
         "@babel/preset-react": "^7.9.4",
         "@sentry/browser": "^5.15.5",
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "bootstrap-select": "^1.13.16",
         "ckeditor": "^4.12.1",
         "jquery": "^2.2.4",
