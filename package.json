@@ -31,7 +31,7 @@
         "bootstrap-select": "^1.13.16",
         "ckeditor": "^4.12.1",
         "jquery": "^2.2.4",
-        "moment": "^2.25.2",
+        "moment": "^2.29.2",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "react-toastify": "^5.5.0"
